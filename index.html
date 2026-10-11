@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<style>[hidden]{display:none!important}img{max-width:100%}body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>To watch… or not</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Bebas+Neue&display=swap">
+<style>
+/* Salle sombre : photo de salle en fondu, compteurs dorés, sélection en cartes à affiche, puis la liste complète. Thème sombre unique, assumé. */
+:root{
+  color-scheme:dark;
+  --bg:#0B0C10; --surface:#14161C; --surface-2:#1C1F27; --line:#22252E; --line-2:#2A2E39;
+  --ink:#F3F1EA; --soft:#E4E2DA; --muted:#B9BDC9; --dim:#9EA3B2; --faint:#8A8FA0;
+  --gold:#F2B43A; --gold-hi:#FFE6A6; --gold-lo:#B9761C; --cream:#E9D9B8; --danger:#FF9B8F;
+  --serie:#6FC6CF; --film:#B7A2F2; --doc:#E0B48D;
+  --display:"Archivo","Helvetica Neue",sans-serif; --body:"Archivo","Helvetica Neue",sans-serif; --marquee:"Bebas Neue","Archivo",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:var(--ink)} a:hover{color:var(--gold)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1280px;margin:0 auto;padding-inline:32px}
+@media (max-width:640px){.wrap{padding-inline:16px}}
+h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-stretch:75%;text-transform:uppercase;margin:0;text-wrap:balance}
+
+/* Barre du haut */
+.top{position:relative;z-index:2}
+.top .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding-block:14px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;min-height:44px}
+.brand span{font-size:20px;font-weight:800;font-stretch:75%;letter-spacing:.06em;text-transform:uppercase}
+.top nav{display:flex;flex-wrap:wrap;gap:4px}
+.top nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;font-size:14px;font-weight:500;text-decoration:none;color:var(--muted)}
+.top nav a[aria-current]{color:var(--ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--gold)}
+.stamp{margin:0;font-size:13px;color:var(--dim)}
+
+/* Ouverture */
+.hero{position:relative;overflow:hidden;margin-top:-72px;min-height:620px;display:flex;align-items:flex-end}
+.hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 55%}
+.hero .fade-v{position:absolute;inset:0;background:linear-gradient(180deg,var(--bg) 0%,rgba(11,12,16,.82) 9%,rgba(11,12,16,.4) 20%,rgba(11,12,16,.12) 34%,rgba(11,12,16,.3) 56%,rgba(11,12,16,.78) 80%,var(--bg) 97%)}
+.hero .fade-h{position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,12,16,.9) 0%,rgba(11,12,16,.5) 42%,rgba(11,12,16,0) 72%)}
+.hero .wrap{position:relative;width:100%;padding-block:280px 24px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:32px}
+.hero .intro{flex:1 1 480px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.eyebrow{margin:0;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.lede{margin:0;max-width:58ch;font-size:18px;line-height:1.55;color:var(--soft)}
+.counts{flex:0 1 340px;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.counts div{display:flex;flex-direction:column-reverse;align-items:center;gap:4px;padding:8px}
+.counts dt{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cream);text-shadow:0 1px 2px rgba(0,0,0,.8)}
+.counts dd{margin:0;font-family:var(--marquee);font-size:44px;line-height:.9;letter-spacing:.02em;background:linear-gradient(180deg,var(--gold-hi) 0%,var(--gold) 55%,var(--gold-lo) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(242,180,58,.45)) drop-shadow(0 3px 2px rgba(0,0,0,.7));font-variant-numeric:tabular-nums}
+@media (max-width:640px){.hero{min-height:0}.hero .wrap{padding-block:200px 16px}}
+
+/* Pastilles et notes */
+.pill{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+.pill.serie{background:rgba(111,198,207,.14);color:var(--serie)}
+.pill.film{background:rgba(183,162,242,.16);color:var(--film)}
+.pill.doc{background:rgba(224,180,141,.16);color:var(--doc)}
+.sc{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+.sc.hi{color:var(--gold)}
+.sc.press{justify-self:start;padding:2px 8px;margin-left:-8px;border-radius:6px;background:rgba(242,180,58,.16);box-shadow:inset 0 0 0 1px rgba(242,180,58,.45);color:var(--gold-hi);font-weight:700} .sc.lo,.sc.na{color:var(--faint);font-weight:400}
+
+/* Les mieux notés */
+.picks{padding-block:48px 0;display:flex;flex-direction:column;gap:20px}
+.picks-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px}
+.picks-head p{margin:0;font-size:14px;color:var(--dim)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(480px,100%),1fr));gap:16px}
+.card{position:relative;overflow:hidden;min-height:300px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 212px 22px 22px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.card>img{position:absolute;top:0;right:0;bottom:0;width:196px;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 22%);mask-image:linear-gradient(90deg,transparent 0%,#000 22%)}
+.card .meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:13px;color:var(--dim)}
+.card .rank{font-weight:800;color:var(--faint);font-variant-numeric:tabular-nums}
+.card h3{margin:0;font-family:var(--display);font-size:32px;line-height:.98;font-weight:800;font-stretch:75%;text-transform:uppercase;text-wrap:balance}
+.card .genre{margin:0;font-size:14px;font-weight:600;color:var(--muted)}
+.card .sum{margin:0;font-size:13px;line-height:1.45;color:var(--dim)}
+.card .grow{flex-grow:1;display:flex;flex-direction:column;gap:10px}
+.rates{display:flex;flex-wrap:wrap;gap:14px 26px;padding-top:16px;border-top:1px solid var(--line)}
+.rates a{display:flex;flex-direction:column;gap:6px;text-decoration:none}
+.rates b{font-size:18px;font-variant-numeric:tabular-nums}
+.rates b.na{font-weight:400;color:var(--faint)}
+.rates small{font-size:12px;color:var(--dim)}
+.cta{display:inline-flex;align-items:center;gap:10px;align-self:flex-start;min-height:44px;padding:0 16px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line-2);color:var(--ink);font-size:14px;font-weight:600;text-decoration:none}
+.cta:hover{border-color:var(--gold);color:var(--ink)}
+@media (max-width:560px){.card{padding:20px 20px 20px 20px;padding-top:200px}.card>img{left:0;width:100%;height:190px;bottom:auto;object-position:50% 20%;-webkit-mask-image:linear-gradient(180deg,#000 60%,transparent 100%);mask-image:linear-gradient(180deg,#000 60%,transparent 100%)}}
+
+/* Liste */
+.list{padding-block:64px 80px;display:flex;flex-direction:column;gap:16px}
+.list-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px}
+.list-head p{margin:0;font-size:14px;color:var(--dim);font-variant-numeric:tabular-nums}
+.filters{display:flex;flex-direction:column;gap:10px;padding:12px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.frow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.seg{margin:0;padding:4px;border:0;border-radius:10px;background:var(--bg);display:flex;flex-wrap:wrap;gap:4px;min-width:0}
+.seg button{font:inherit;font-size:14px;font-weight:600;color:var(--muted);background:transparent;border:0;border-radius:8px;padding:0 14px;min-height:40px;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.seg button img{display:block}
+.seg button[aria-pressed="true"] img.inv{filter:invert(1)}
+.src{display:inline-flex;align-items:center;height:22px;padding:0 7px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line-2)}
+.seg button small{font-size:12px;font-weight:500;color:var(--faint);font-variant-numeric:tabular-nums}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button[aria-pressed="true"] small{color:#4A4E5C}
+.field{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;background:var(--bg);border:1px solid var(--line-2);border-radius:10px;color:var(--dim);font-size:13px}
+.field:focus-within{border-color:var(--gold)}
+.field select,.field input{background:transparent;border:0;color:var(--ink);font:inherit;font-size:14px;font-weight:600;min-width:0}
+.field input{flex:1;font-weight:400;font-size:15px;outline:none}
+.field.search{flex:1 1 260px;min-width:0}
+.field option{background:var(--surface);color:var(--ink)}
+.table{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.row{display:grid;grid-template-columns:48px minmax(240px,1fr) 104px 132px 84px 220px 150px;gap:12px;align-items:center;padding:14px 20px;border-top:1px solid var(--line)}
+.row.head{border-top:0;align-items:end;padding-block:16px 12px;background:#111318;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.stack{display:flex;flex-direction:column;gap:8px}
+.pos{font-size:14px;color:var(--faint);font-variant-numeric:tabular-nums}
+.tcell{min-width:0;display:flex;align-items:center;gap:16px}
+.tcell .txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.tline{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.tline a{font-size:16px;font-weight:600;line-height:1.3;text-decoration:none}
+.tline .g{font-size:13px;font-weight:600;color:var(--muted)}
+.note{font-size:13px;line-height:1.4;color:var(--dim)}
+.poster{flex:none;width:44px;height:63px;object-fit:cover;border-radius:6px;border:1px solid var(--line-2);background:var(--surface-2);box-shadow:0 6px 16px rgba(0,0,0,.45)}
+.date{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.where{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 10px;border-radius:8px;background:var(--surface-2);border:1px solid var(--line-2);text-decoration:none;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.04em}
+.chip:hover{border-color:var(--gold);color:var(--ink)}
+.chip span{padding-left:8px;border-left:1px solid var(--line-2)}
+.act{display:flex;justify-content:flex-end}
+.ghost{font:inherit;font-size:13px;font-weight:600;color:var(--muted);background:transparent;border:1px solid var(--line-2);border-radius:8px;min-height:36px;padding:0 12px;cursor:pointer}
+.ghost:hover{color:var(--ink);border-color:#5C6170}
+.row.pending>*:not(.act){opacity:.35}
+.act{flex-wrap:wrap;gap:6px;align-items:center}
+.nflink{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border-radius:8px;background:#E50914;color:#fff;font-size:13px;font-weight:700;text-decoration:none}
+.nflink:hover{color:#fff;background:#C40812}
+.rm{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.rm>span{flex-basis:100%;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.rmx{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 10px;border-radius:8px;text-decoration:none}
+.rmx.nf{background:#E50914}.rmx.nf:hover{background:#C40812}
+.rmx.pv{background:#1A98FF}.rmx.pv:hover{background:#0779FF}
+.rmx.atv{background:#000;border:1px solid var(--line-2)}.rmx.atv:hover{border-color:var(--ink)}
+@media (min-width:861px){.row.pending{grid-template-columns:48px minmax(220px,1fr) 104px 132px 84px 150px 230px}}
+.row.pending .ghost{color:var(--danger);border-color:var(--danger)}
+.bulk{margin-left:auto;min-height:44px;color:var(--danger);border-color:var(--danger)}
+.bulk:hover{color:var(--ink);border-color:var(--danger);background:rgba(255,155,143,.12)}
+.lab{display:none}
+.list-foot{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;padding:14px 20px;border-top:1px solid var(--line)}
+.list-foot span{font-size:14px;color:var(--dim);font-variant-numeric:tabular-nums}
+.empty{margin:0;padding:40px 20px;text-align:center;color:var(--dim);border-top:1px solid var(--line)}
+.removed{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:14px}
+.savebar{position:sticky;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:var(--ink);color:var(--bg);border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.55)}
+.savebar p{margin:0;font-weight:700}
+.savebar p small{display:block;margin-top:2px;font-size:14px;font-weight:400;color:#3D4150}
+.savebar button{font:inherit;font-size:14px;font-weight:700;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--bg);cursor:pointer}
+.savebar .no{background:transparent;color:var(--bg)} .savebar .yes{background:var(--bg);color:var(--ink)}
+@media (max-width:860px){
+  .row.head{display:none}
+  .row{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"t t t t" "ac ac im d" "w w w w" "a a a a";gap:12px 14px;padding:16px}
+  .row>.pos{display:none}
+  .row>.tcell{grid-area:t;flex-direction:row-reverse;justify-content:flex-end}
+  .row>.date{grid-area:d}
+  .row>.c-ac{grid-area:ac} .row>.c-im{grid-area:im}
+  .row>.where{grid-area:w} .row>.act{grid-area:a;justify-content:flex-start}
+  .lab{display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+  .poster{width:56px;height:80px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" id="top">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F2B43A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"/></svg>
+      <span>To watch… or not</span>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#liste" aria-current="page">Ma liste</a>
+      <a href="#mieux-notes">Les mieux notés</a>
+    </nav>
+    <p class="stamp">Liste et notes du 10 oct. 2026</p>
+  </div>
+</header>
+
+<section class="hero">
+  <img src="hero.jpg" alt="Grande salle du cinéma Lichtburg à Essen : rideau rouge, fauteuils rouges, lumière chaude">
+  <div class="fade-v" aria-hidden="true"></div>
+  <div class="fade-h" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="intro">
+      <p class="eyebrow"><svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true" style="filter:drop-shadow(0 0 4px rgba(242,180,58,.5))"><defs><linearGradient id="medal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE6A6"/><stop offset=".55" stop-color="#F2B43A"/><stop offset="1" stop-color="#B9761C"/></linearGradient></defs><path d="M2 0h3l1.6 5.2L5 7.4zM10 0H7L5.4 5.2 7 7.4z" fill="#C8102E"/><circle cx="6" cy="12.6" r="5.9" fill="url(#medal)"/><circle cx="6" cy="12.6" r="4.6" fill="none" stroke="#8A5A12" stroke-width=".6" opacity=".7"/><path d="M6.6 9.3v6.6H5.3v-5.1l-1.2.6-.4-1 1.9-1.1z" fill="#5A3A08"/></svg>Listes Netflix, Prime Video et Apple TV · Simone</p>
+      <h1 class="sr">Ma liste de Simone</h1>
+      <p class="lede"><span id="total">157</span> films et séries mis de côté sur Netflix, Prime Video et Apple TV, avec les notes AlloCiné et IMDb, et les autres plateformes où les regarder en France.</p>
+    </div>
+    <dl class="counts" id="counts">
+      <div><dt>Séries</dt><dd>67</dd></div>
+      <div><dt>Films</dt><dd>40</dd></div>
+      <div><dt>Docs</dt><dd>5</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="wrap picks" id="mieux-notes">
+  <div class="picks-head">
+    <h2>Les mieux notés</h2>
+    <p>Les six meilleures notes IMDb, toutes listes confondues : Netflix, Prime Video et Apple TV</p>
+  </div>
+  <div class="cards" id="cards"></div>
+</section>
+
+<section class="wrap list" id="liste">
+  <div class="list-head">
+    <h2>Toute la liste</h2>
+    <p aria-live="polite" id="count-top"></p>
+  </div>
+
+  <form class="filters" id="filters" autocomplete="off">
+    <div class="frow">
+      <fieldset class="seg" id="srcs"><legend class="sr">Liste d’origine</legend></fieldset>
+      <fieldset class="seg" id="types"><legend class="sr">Type</legend></fieldset>
+      <label class="field search" for="q">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span class="sr">Rechercher un titre</span>
+        <input type="search" id="q" placeholder="Rechercher un titre…">
+      </label>
+    </div>
+    <div class="frow">
+      <label class="field" for="genre">Genre
+        <select id="genre"><option value="">Tous</option></select>
+      </label>
+      <label class="field" for="minAcP"><img src="logos/allocine-ticket.svg" width="13" height="18" alt="">AlloCiné presse
+        <select id="minAcP"><option value="">Toutes les notes</option><option value="0-2.5">Moins de 2,5</option><option value="2.5-3">De 2,5 à 3</option><option value="3-3.5">De 3 à 3,5</option><option value="3.5-4">De 3,5 à 4</option><option value="4-99">4 et plus</option></select>
+      </label>
+      <label class="field" for="minAc"><img src="logos/allocine-ticket.svg" width="13" height="18" alt="">AlloCiné spectateurs
+        <select id="minAc"><option value="">Toutes les notes</option><option value="0-2.5">Moins de 2,5</option><option value="2.5-3">De 2,5 à 3</option><option value="3-3.5">De 3 à 3,5</option><option value="3.5-4">De 3,5 à 4</option><option value="4-99">4 et plus</option></select>
+      </label>
+      <label class="field" for="minImdb"><img src="logos/imdb.svg" width="30" height="15" alt="">IMDb
+        <select id="minImdb"><option value="">Toutes les notes</option><option value="0-5">Moins de 5</option><option value="5-6">De 5 à 6</option><option value="6-7">De 6 à 7</option><option value="7-8">De 7 à 8</option><option value="8-99">8 et plus</option></select>
+      </label>
+      <label class="field" for="sort" style="margin-left:auto">Trier par
+        <select id="sort">
+          <option value="pos">Ordre de Ma liste</option>
+          <option value="imdb">Note IMDb</option>
+          <option value="acS">AlloCiné spectateurs</option>
+          <option value="acP">AlloCiné presse</option>
+          <option value="date">Sortie, plus récent</option>
+          <option value="title">Titre, A à Z</option>
+        </select>
+      </label>
+    </div>
+  </form>
+
+  <div class="table">
+    <div class="row head">
+      <span>N°</span>
+      <div style="display:flex;justify-content:space-between;gap:16px"><span>Titre</span><span style="width:44px;text-align:center">Affiche</span></div>
+      <span>Sortie</span>
+      <div class="stack"><img src="logos/allocine-light.svg" width="74" height="16" alt="AlloCiné"><div class="pair"><span>Presse</span><span>Spect.</span></div></div>
+      <div class="stack"><img src="logos/imdb.svg" width="36" height="18" alt="IMDb"><span>Sur 10</span></div>
+      <div class="stack"><span style="display:flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-weight:500">via <img src="logos/justwatch.svg" width="68" height="11" alt="JustWatch"></span><span>Où regarder</span></div>
+      <span class="sr">Actions</span>
+    </div>
+    <ol id="rows" style="list-style:none;margin:0;padding:0"></ol>
+    <p class="empty" id="empty" hidden>Aucun titre ne correspond à ces filtres. Élargissez la recherche ou changez de tranche de note.</p>
+    <div class="list-foot">
+      <label class="field" for="limit">Afficher
+        <select id="limit"><option value="10">10 titres</option><option value="100">100 titres</option><option value="all">Tous les titres</option></select>
+      </label>
+      <span id="count-bottom"></span>
+      <button type="button" class="ghost bulk" id="bulk" hidden></button>
+    </div>
+  </div>
+
+  <div class="removed" id="removed" hidden>
+    <span id="removed-label"></span>
+    <button type="button" class="ghost" id="undo">Annuler le dernier retrait</button>
+    <button type="button" class="ghost" id="restore">Tout remettre</button>
+  </div>
+
+  <section class="savebar" id="savebar" aria-label="Modifications à enregistrer" hidden>
+    <p><span id="pending-label"></span><small>Retiré ici, sur votre appareil. Pour le retirer aussi ailleurs, touchez Netflix, Prime Video ou Apple TV, puis retirez-le de « Ma liste », de la « Liste de souhaits » ou de « À suivre » sur la page du titre.</small></p>
+    <div style="display:flex;gap:8px">
+      <button type="button" class="no" id="cancel">Annuler</button>
+      <button type="button" class="yes" id="save">Enregistrer</button>
+    </div>
+  </section>
+</section>
+
+<script>
+(function(){
+  const LOGO = {
+    nf:{src:'logos/netflix.svg',w:44,h:12,name:'Netflix'},
+    hbo:{src:'logos/hbomax-stacked-white.svg',w:28,h:20,name:'HBO Max'},
+    pv:{src:'logos/primevideo-white.svg',w:45,h:14,name:'Prime Video, chaîne HBO Max'},
+    mol:{src:'logos/molotov.svg',w:43,h:16,name:'Molotov'},
+    sfr:{src:'logos/sfr.svg',w:18,h:18,name:'SFR Play'},
+    atv:{src:'logos/appletv-white.svg',w:18,h:18,name:'Apple TV'}
+  };
+  const NF='https://www.netflix.com/title/';
+  const PICKS=[
+    {pos:131,year:2019,genre:'Action · Science-fiction',sum:"Des super-héros adulés mais corrompus face à une bande de justiciers sans pouvoirs, décidés à les faire tomber.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=22668.html',imdb:'tt1190634'},
+    {pos:146,year:2022,genre:'Espionnage · Thriller',sum:"À Londres, des agents du MI5 relégués pour leurs erreurs, sous les ordres d'un chef négligé mais redoutable, se retrouvent mêlés à de vraies affaires.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=25905.html',imdb:'tt5875444'},
+    {pos:12,year:2022,genre:'Thriller · Drame',sum:"Harcelée au lycée, une femme prépare pendant des années sa vengeance contre ceux qui ont brisé sa jeunesse.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=32462.html',imdb:'tt21344706'},
+    {pos:116,year:2002,genre:'Crime · Biopic',sum:"Dans les années 1960, un jeune faussaire de génie se fait passer pour pilote, médecin ou avocat, traqué par un agent du FBI.",ac:'https://www.allocine.fr/film/fichefilm_gen_cfilm=35973.html',imdb:'tt0264464'},
+    {pos:140,year:2023,genre:'Science-fiction · Mystère',sum:"Les derniers humains vivent dans un silo géant enfoui sous terre. Une ingénieure commence à douter de ce qu'on leur raconte sur le monde extérieur.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=29245.html',imdb:'tt14688458'},
+    {pos:143,year:2019,genre:'Science-fiction · Drame',sum:"Et si l'URSS avait marché la première sur la Lune ? La course à l'espace ne s'arrête jamais, et l'histoire change de cap.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=23080.html',imdb:'tt7772588'}
+  ];
+  const SRCS=[{id:'all',label:'Toutes les listes'},{id:'nf',img:'<img src="logos/netflix.svg" width="52" height="14" alt="Netflix">'},{id:'pv',img:'<img class="inv" src="logos/primevideo-white.svg" width="52" height="16" alt="Prime Video">'},{id:'atv',img:'<img class="inv" src="logos/appletv-white.svg" width="22" height="22" alt="Apple TV">'}];
+  const SRCBADGE={nf:'<span class="src" title="Ma liste Netflix"><img src="logos/netflix-n.svg" width="8" height="14" alt="Netflix"></span>',pv:'<span class="src" title="Liste de favoris Prime Video"><img src="logos/primevideo-white.svg" width="38" height="12" alt="Prime Video"></span>',atv:'<span class="src" title="À suivre Apple TV"><img src="logos/appletv-white.svg" width="16" height="16" alt="Apple TV"></span>'};
+  const CTALOGO={nf:'<img src="logos/netflix.svg" width="52" height="14" alt="Netflix">',pv:'<img src="logos/primevideo-white.svg" width="52" height="16" alt="Prime Video">',atv:'<img src="logos/appletv-white.svg" width="20" height="20" alt=""> Apple TV'};
+  const titleUrl=d=>d.nf?NF+d.nf:d.pv?'https://www.primevideo.com/detail/'+d.pv:d.atv;
+  const TYPES=[{id:'all',label:'Tout'},{id:'Série',label:'Séries'},{id:'Film',label:'Films'},{id:'Documentaire',label:'Documentaires'}];
+  const PILL={'Série':['serie','Série'],'Film':['film','Film'],'Documentaire':['doc','Doc']};
+  const MONTHS={'janv.':1,'févr.':2,'mars':3,'avr.':4,'mai':5,'juin':6,'juil.':7,'août':8,'sept.':9,'oct.':10,'nov.':11,'déc.':12};
+
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmt=x=>x==null?'—':x.toFixed(1).replace('.',',');
+  const cls=(x,hi,lo)=>x==null?'sc na':x>=hi?'sc hi':x<lo?'sc lo':'sc';
+  const dateKey=d=>{const [day,mon,yr]=d.split(' ');return (+yr)*10000+(MONTHS[mon]||0)*100+(+day)};
+
+  const store={get(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+  const S={src:'all',type:'all',q:'',genre:'',minAc:'',minAcP:'',minImdb:'',sort:'pos',limit:store.get('twon-limit','10'),pending:{},removed:store.get('twon-removed',{}),hist:store.get('twon-hist',[])};
+  if(!S.hist.length&&Object.keys(S.removed).length) S.hist=[Object.keys(S.removed).map(Number)];
+  const persist=()=>{store.set('twon-removed',S.removed);store.set('twon-hist',S.hist);};
+  let DATA=[];
+
+  const $=id=>document.getElementById(id);
+
+  function renderCards(){
+    $('cards').innerHTML=PICKS.map((p,i)=>{
+      const d=DATA.find(x=>x.pos===p.pos); if(!d) return '';
+      const pill=PILL[d.type];
+      const acP=d.acP==null?'<b class="na">—</b>':`<b>${fmt(d.acP)}</b>`;
+      return `<article class="card">
+        <div class="grow">
+          <div class="meta"><span class="rank" aria-hidden="true">0${i+1}</span><span class="pill ${pill[0]}">${pill[1]}</span><span>${p.year}</span>${d.src.map(k=>SRCBADGE[k]).join('')}</div>
+          <h3>${esc(d.title)}</h3>
+          <p class="genre">${esc(p.genre)}</p>
+          <p class="sum">${esc(p.sum)}</p>
+        </div>
+        <div class="rates">
+          <a href="${p.ac}" target="_blank" rel="noopener"><img src="logos/allocine-ticket.svg" width="14" height="20" alt="AlloCiné">${acP}<small>presse</small></a>
+          <a href="${p.ac}" target="_blank" rel="noopener"><img src="logos/allocine-ticket.svg" width="14" height="20" alt="AlloCiné"><b>${fmt(d.acS)}</b><small>spectateurs</small></a>
+          <a href="https://www.imdb.com/title/${p.imdb}/" target="_blank" rel="noopener"><img src="logos/imdb.svg" width="40" height="20" alt="IMDb"><b>${fmt(d.imdb)}</b><small>sur 10</small></a>
+        </div>
+        <a class="cta" href="${esc(titleUrl(d))}" target="_blank" rel="noopener">Regarder sur ${CTALOGO[d.src[0]]}</a>
+        <img src="${d.poster}" alt="" loading="lazy">
+      </article>`;
+    }).join('');
+  }
+
+  function renderSrcs(){
+    const live=DATA.filter(d=>!S.removed[d.pos]);
+    $('srcs').innerHTML='<legend class="sr">Liste d’origine</legend>'+SRCS.map(t=>{
+      const n=t.id==='all'?live.length:live.filter(d=>(d.src||[]).includes(t.id)).length;
+      return `<button type="button" data-src="${t.id}" aria-pressed="${S.src===t.id}">${t.img||t.label}<small>${n}</small></button>`;
+    }).join('');
+    $('total').textContent=live.length;
+  }
+
+  function renderTypes(){
+    const live=DATA.filter(d=>!S.removed[d.pos]&&(S.src==='all'||(d.src||[]).includes(S.src)));
+    $('types').innerHTML='<legend class="sr">Type</legend>'+TYPES.map(t=>{
+      const n=t.id==='all'?live.length:live.filter(d=>d.type===t.id).length;
+      return `<button type="button" data-type="${t.id}" aria-pressed="${S.type===t.id}">${t.label}<small>${n}</small></button>`;
+    }).join('');
+  }
+
+  const inRange=(x,r)=>{if(!r)return true;if(x==null)return false;const [lo,hi]=r.split('-').map(Number);return x>=lo&&x<hi};
+
+  function filtered(){
+    const q=S.q.trim().toLowerCase();
+    let v=DATA.filter(d=>!S.removed[d.pos]
+      &&(S.src==='all'||(d.src||[]).includes(S.src))
+      &&(S.type==='all'||d.type===S.type)
+      &&(!q||d.title.toLowerCase().includes(q))
+      &&(!S.genre||(d.genre||'').split(' · ').includes(S.genre))
+      &&inRange(d.acS,S.minAc)
+      &&inRange(d.acP,S.minAcP)
+      &&inRange(d.imdb,S.minImdb));
+    const desc=k=>(a,b)=>(b[k]??-1)-(a[k]??-1);
+    if(S.sort==='imdb') v.sort(desc('imdb'));
+    else if(S.sort==='acS') v.sort(desc('acS'));
+    else if(S.sort==='acP') v.sort(desc('acP'));
+    else if(S.sort==='date') v.sort((a,b)=>dateKey(b.date)-dateKey(a.date));
+    else if(S.sort==='title') v.sort((a,b)=>a.title.localeCompare(b.title,'fr'));
+    else v.sort((a,b)=>a.pos-b.pos);
+    return v;
+  }
+
+  function rmLinks(d){
+    const t=encodeURIComponent(d.title);
+    const pvOffer=d.offers.find(o=>o[0]==='pv'&&o[2]);
+    const pv=pvOffer?pvOffer[2]:'https://www.primevideo.com/search/?phrase='+t;
+    return `<div class="rm"><span>Retirer aussi sur</span>
+      ${d.nf?`<a class="rmx nf" href="${NF+d.nf}" target="_blank" rel="noopener" aria-label="Retirer sur Netflix : ouvrir la page du titre"><img src="logos/netflix.svg" width="44" height="12" alt=""></a>`:''}
+      <a class="rmx pv" href="${esc(pv)}" target="_blank" rel="noopener" aria-label="Retirer sur Prime Video : ouvrir le titre"><img src="logos/primevideo-white.svg" width="45" height="14" alt=""></a>
+      <a class="rmx atv" href="${esc(d.atv||'https://tv.apple.com/fr/search?term='+t)}" target="_blank" rel="noopener" aria-label="Retirer sur Apple TV : rechercher le titre"><img src="logos/appletv-white.svg" width="22" height="22" alt=""></a>
+    </div>`;
+  }
+
+  function renderRows(){
+    const v=filtered();
+    const shown=S.limit==='all'?v:v.slice(0,+S.limit);
+    $('rows').innerHTML=shown.map(d=>{
+      const pill=PILL[d.type], isP=!!S.pending[d.pos];
+      const offers=d.offers.map(([k,q,url])=>{const L=LOGO[k];if(!L)return '';return `<a class="chip" href="${esc(url||NF+d.nf)}" target="_blank" rel="noopener" aria-label="Regarder sur ${L.name}, ${q}"><img src="${L.src}" width="${L.w}" height="${L.h}" alt=""><span>${q}</span></a>`}).join('');
+      return `<li class="row${isP?' pending':''}">
+        <span class="pos">${d.pos}</span>
+        <div class="tcell">
+          <div class="txt">
+            <div class="tline"><a href="${titleUrl(d)}" target="_blank" rel="noopener">${esc(d.title)}</a>${(d.src||[]).map(k=>SRCBADGE[k]).join('')}<span class="pill ${pill[0]}">${pill[1]}</span>${d.genre?`<span class="g">${esc(d.genre)}</span>`:''}</div>
+            ${d.note?`<span class="note">${esc(d.note)}</span>`:''}
+          </div>
+          <img class="poster" src="${d.poster}" alt="" loading="lazy" width="44" height="63">
+        </div>
+        <span class="date"><span class="lab">Sortie</span>${esc(d.date)}</span>
+        <div class="c-ac"><span class="lab">AlloCiné presse · spect.</span><div class="pair"><span class="${d.acP!=null&&d.acP>=3.5?'sc press':cls(d.acP,4,2.5)}">${fmt(d.acP)}</span><span class="${cls(d.acS,4,2.5)}">${fmt(d.acS)}</span></div></div>
+        <div class="c-im"><span class="lab">IMDb</span><span class="${cls(d.imdb,7.5,6)}">${fmt(d.imdb)}</span></div>
+        <div class="where">${offers}</div>
+        <div class="act">${isP?`${rmLinks(d)}`:''}<button type="button" class="ghost" data-toggle="${d.pos}">${isP?'Annuler':'Retirer de la liste'}</button></div>
+      </li>`;
+    }).join('');
+    $('empty').hidden=shown.length>0;
+    const label=`${shown.length} sur ${v.length} titres affichés`;
+    $('count-top').textContent=label; $('count-bottom').textContent=label;
+
+    const active=S.src!=='all'||S.type!=='all'||S.q.trim()||S.genre||S.minAc||S.minAcP||S.minImdb;
+    const allP=v.length>0&&v.every(d=>S.pending[d.pos]);
+    $('bulk').hidden=!active||v.length===0;
+    $('bulk').textContent=allP?`Annuler le retrait des ${v.length} titres filtrés`:(v.length===1?'Retirer le titre filtré':`Retirer les ${v.length} titres filtrés`);
+    const nP=Object.keys(S.pending).filter(k=>S.pending[k]).length;
+    $('savebar').hidden=nP===0;
+    $('pending-label').textContent=nP===1?'1 titre sera retiré de la liste':`${nP} titres seront retirés de la liste`;
+    const nR=Object.keys(S.removed).length;
+    $('removed').hidden=nR===0;
+    $('removed-label').textContent=nR===1?'1 titre retiré de la liste.':`${nR} titres retirés de la liste.`;
+    const last=S.hist[S.hist.length-1]||[];
+    $('undo').textContent=last.length>1?`Annuler le dernier retrait (${last.length} titres)`:'Annuler le dernier retrait';
+    $('undo').hidden=!last.length; $('restore').hidden=S.hist.length<2;
+  }
+
+  function counts(){
+    const live=DATA.filter(d=>!S.removed[d.pos]);
+    const c={'Série':0,'Film':0,'Documentaire':0}; live.forEach(d=>c[d.type]++);
+    const dd=$('counts').querySelectorAll('dd'); dd[0].textContent=c['Série']; dd[1].textContent=c['Film']; dd[2].textContent=c['Documentaire'];
+  }
+
+  function all(){renderSrcs();renderTypes();renderRows();counts();}
+
+  $('srcs').addEventListener('click',e=>{const b=e.target.closest('button[data-src]');if(!b)return;S.src=b.dataset.src;renderSrcs();renderTypes();renderRows();});
+  $('types').addEventListener('click',e=>{const b=e.target.closest('button[data-type]');if(!b)return;S.type=b.dataset.type;renderTypes();renderRows();});
+  $('filters').addEventListener('submit',e=>e.preventDefault());
+  $('q').addEventListener('input',e=>{S.q=e.target.value;renderRows();});
+  $('genre').addEventListener('change',e=>{S.genre=e.target.value;renderRows();});
+  $('minAcP').addEventListener('change',e=>{S.minAcP=e.target.value;renderRows();});
+  $('minAc').addEventListener('change',e=>{S.minAc=e.target.value;renderRows();});
+  $('minImdb').addEventListener('change',e=>{S.minImdb=e.target.value;renderRows();});
+  $('sort').addEventListener('change',e=>{S.sort=e.target.value;renderRows();});
+  $('limit').value=S.limit;
+  $('limit').addEventListener('change',e=>{S.limit=e.target.value;store.set('twon-limit',S.limit);renderRows();});
+  $('rows').addEventListener('click',e=>{const b=e.target.closest('[data-toggle]');if(!b)return;const p=+b.dataset.toggle;S.pending[p]=!S.pending[p];renderRows();});
+  $('bulk').addEventListener('click',()=>{const v=filtered();const allP=v.every(d=>S.pending[d.pos]);v.forEach(d=>{S.pending[d.pos]=!allP});renderRows();});
+  $('cancel').addEventListener('click',()=>{S.pending={};renderRows();});
+  $('save').addEventListener('click',()=>{const b=Object.keys(S.pending).filter(k=>S.pending[k]&&!S.removed[k]).map(Number);b.forEach(k=>{S.removed[k]=true});if(b.length)S.hist.push(b);S.pending={};persist();all();});
+  $('undo').addEventListener('click',()=>{const b=S.hist.pop()||[];b.forEach(k=>{delete S.removed[k]});persist();all();});
+  $('restore').addEventListener('click',()=>{S.removed={};S.hist=[];persist();all();});
+
+  fetch('data.json').then(r=>r.json()).then(d=>{
+    DATA=d;
+    const genres=new Set(); d.forEach(x=>(x.genre||'').split(' · ').filter(Boolean).forEach(g=>genres.add(g)));
+    $('genre').innerHTML='<option value="">Tous</option>'+[...genres].sort((a,b)=>a.localeCompare(b,'fr')).map(g=>`<option>${esc(g)}</option>`).join('');
+    renderCards(); all();
+  }).catch(()=>{$('empty').hidden=false;$('empty').textContent="La liste n'a pas pu se charger. Rechargez la page."});
+})();
+</script>
+
+</body>
+</html>
