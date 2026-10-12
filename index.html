@@ -188,6 +188,8 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
 .ghost:active,.cta:active,.chip:active,.seenbtn:active{transform:translateY(2px);box-shadow:inset 0 2px 5px rgba(0,0,0,.55),0 0 0 #07080B}
 .seg{background:linear-gradient(180deg,#08090C 0%,#111318 100%);box-shadow:inset 0 2px 6px rgba(0,0,0,.65),inset 0 -1px 0 rgba(255,255,255,.05)}
 .seg button{transition:transform .08s ease,background .15s}
+#filters .seg button{font-size:16px;font-weight:700;padding:0 18px;min-height:46px;gap:10px}
+#filters .seg button small{font-size:14px;font-weight:600}
 .seg button[aria-pressed="false"]:hover{background:rgba(255,255,255,.05)}
 .seg button[aria-pressed="true"]{background:linear-gradient(180deg,#FFFFFF 0%,#DAD7CD 100%);box-shadow:inset 0 1px 0 #fff,0 2px 0 #8E8B82,0 5px 12px rgba(0,0,0,.5)}
 .seg button:active{transform:translateY(1px)}
@@ -351,7 +353,7 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
     {pos:114,year:2008,genre:'Thriller · Drame',sum:"Dans un lycée allemand, un professeur lance une expérience sur l'autocratie. En quelques jours, le jeu échappe à tout contrôle.",ac:'https://www.allocine.fr/film/fichefilm_gen_cfilm=134390.html',imdb:'tt1063669'},
     {pos:119,year:2019,genre:'Comédie · Drame',sum:"Los Angeles, 1969 : un acteur de western sur le déclin et sa doublure cascadeur, voisins de Sharon Tate, cherchent leur place dans un Hollywood qui change.",ac:'https://www.allocine.fr/film/fichefilm_gen_cfilm=257482.html',imdb:'tt7131622'}
   ];
-  const SRCS=[{id:'all',label:'Toutes les listes'},{id:'nf',img:'<img src="logos/netflix.svg" width="52" height="14" alt="Netflix">'},{id:'pv',img:'<img class="inv" src="logos/primevideo-white.svg" width="52" height="16" alt="Prime Video">'},{id:'atv',img:'<img class="inv" src="logos/appletv-white.svg" width="22" height="22" alt="Apple TV">'}];
+  const SRCS=[{id:'all',label:'Toutes les listes'},{id:'nf',img:'<img src="logos/netflix.svg" width="68" height="18" alt="Netflix">'},{id:'pv',img:'<img class="inv" src="logos/primevideo-white.svg" width="66" height="21" alt="Prime Video">'},{id:'atv',img:'<img class="inv" src="logos/appletv-white.svg" width="28" height="28" alt="Apple TV">'}];
   const SRCBADGE={nf:'<span class="src" title="Ma liste Netflix"><img src="logos/netflix-n.svg" width="8" height="14" alt="Netflix"></span>',pv:'<span class="src" title="Liste de favoris Prime Video"><img src="logos/primevideo-white.svg" width="38" height="12" alt="Prime Video"></span>',atv:'<span class="src" title="À suivre Apple TV"><img src="logos/appletv-white.svg" width="16" height="16" alt="Apple TV"></span>'};
   const CTALOGO={nf:'<img src="logos/netflix.svg" width="52" height="14" alt="Netflix">',pv:'<img src="logos/primevideo-white.svg" width="52" height="16" alt="Prime Video">',atv:'<img src="logos/appletv-white.svg" width="20" height="20" alt=""> Apple TV'};
   const titleUrl=d=>d.nf?NF+d.nf:d.pv?'https://www.primevideo.com/detail/'+d.pv:d.atv;
