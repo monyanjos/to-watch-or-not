@@ -274,10 +274,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
 </section>
 
 <section class="wrap list" id="liste">
-  <div class="list-head">
-    <h2>Toute la liste</h2>
-    <div class="lh-right"><p aria-live="polite" id="count-top"></p><p class="sync" id="sync" hidden></p></div>
-  </div>
+  <h2 class="sr">Toute la liste</h2>
 
   <form class="filters" id="filters" autocomplete="off">
     <div class="frow">
@@ -335,7 +332,8 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
       <label class="field" for="limit">Afficher
         <select id="limit"><option value="10">10 titres</option><option value="100">100 titres</option><option value="all">Tous les titres</option></select>
       </label>
-      <span id="count-bottom"></span>
+      <span id="count-bottom" aria-live="polite"></span>
+      <p class="sync" id="sync" hidden></p>
       <button type="button" class="ghost bulk" id="bulk" hidden></button>
     </div>
   </div>
@@ -547,7 +545,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
     }).join('');
     $('empty').hidden=shown.length>0;
     const label=`${shown.length} sur ${v.length} titres affichés`;
-    $('count-top').textContent=label; $('count-bottom').textContent=label;
+    $('count-bottom').textContent=label;
 
     const nF=[S.genre,S.minAcP,S.minAc,S.minImdb,S.seenF,S.sort!=='pos'].filter(Boolean).length;
     $('fcount').hidden=!nF; $('fcount').textContent=nF;
