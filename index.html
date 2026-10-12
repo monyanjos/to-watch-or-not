@@ -137,7 +137,7 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
 .rmx.nf{background:#E50914}.rmx.nf:hover{background:#C40812}
 .rmx.pv{background:#1A98FF}.rmx.pv:hover{background:#0779FF}
 .rmx.atv{background:#000;border:1px solid var(--line-2)}.rmx.atv:hover{border-color:var(--ink)}
-@media (min-width:861px){.row.pending{grid-template-columns:48px minmax(220px,1fr) 104px 132px 84px 150px 230px}}
+@media (min-width:1121px){.row.pending{grid-template-columns:48px minmax(220px,1fr) 104px 132px 84px 150px 230px}}
 .row.pending .ghost{color:var(--danger);border-color:var(--danger)}
 .bulk{margin-left:auto;min-height:44px;color:var(--danger);border-color:var(--danger)}
 .bulk:hover{color:var(--ink);border-color:var(--danger);background:rgba(255,155,143,.12)}
@@ -151,7 +151,7 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
 .savebar p small{display:block;margin-top:2px;font-size:14px;font-weight:400;color:#3D4150}
 .savebar button{font:inherit;font-size:14px;font-weight:700;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--bg);cursor:pointer}
 .savebar .no{background:transparent;color:var(--bg)} .savebar .yes{background:var(--bg);color:var(--ink)}
-@media (max-width:860px){
+@media (max-width:1120px){
   .row.head{display:none}
   .row{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"t t t t" "ac ac im d" "w w w w" "a a a a";gap:12px 14px;padding:16px}
   .row>.pos{display:none}
@@ -162,12 +162,25 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
   .lab{display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
   .poster{width:56px;height:80px}
 }
+.lh-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.sync{margin:0;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim)}
+.sync::before{content:"";width:7px;height:7px;border-radius:50%;background:#5BC27A;box-shadow:0 0 6px #5BC27A}
+.sync.off::before{background:var(--faint);box-shadow:none}
+.seenbtn{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:13px;font-weight:600;color:var(--muted);min-height:36px;padding:0 12px;border-radius:8px;cursor:pointer}
+.seenbtn .box{width:16px;height:16px;border-radius:4px;border:1.5px solid #5C6170;display:inline-flex;align-items:center;justify-content:center;background:#0B0C10;box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}
+.seenbtn .box svg{opacity:0}
+.seenbtn[aria-pressed="true"]{color:var(--gold-hi)}
+.seenbtn[aria-pressed="true"] .box{background:linear-gradient(180deg,var(--gold-hi),var(--gold));border-color:var(--gold-lo)}
+.seenbtn[aria-pressed="true"] .box svg{opacity:1}
+.row.seen .tline a{color:var(--muted)}
+.row.seen .poster{filter:saturate(.45) brightness(.8)}
+.pill.seen{background:rgba(242,180,58,.16);color:var(--gold-hi)}
 /* Relief : boutons et champs en léger 3D, comme des touches éclairées par le haut */
-.field,.ghost,.cta,.chip{background:linear-gradient(180deg,#272B36 0%,#181A21 100%);border:1px solid #2F3442;border-top-color:#444A5C;border-bottom-color:#0C0D11;box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 0 #07080B,0 6px 14px rgba(0,0,0,.45);transition:transform .08s ease,box-shadow .08s ease,border-color .15s}
+.field,.ghost,.cta,.chip,.seenbtn{background:linear-gradient(180deg,#272B36 0%,#181A21 100%);border:1px solid #2F3442;border-top-color:#444A5C;border-bottom-color:#0C0D11;box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 0 #07080B,0 6px 14px rgba(0,0,0,.45);transition:transform .08s ease,box-shadow .08s ease,border-color .15s}
 .chip{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 2px 0 #07080B,0 3px 8px rgba(0,0,0,.35)}
 .field:focus-within{border-color:var(--gold);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 0 #07080B,0 0 0 3px rgba(242,180,58,.2)}
 .ghost:hover,.cta:hover,.chip:hover{border-top-color:#5A6175}
-.ghost:active,.cta:active,.chip:active{transform:translateY(2px);box-shadow:inset 0 2px 5px rgba(0,0,0,.55),0 0 0 #07080B}
+.ghost:active,.cta:active,.chip:active,.seenbtn:active{transform:translateY(2px);box-shadow:inset 0 2px 5px rgba(0,0,0,.55),0 0 0 #07080B}
 .seg{background:linear-gradient(180deg,#08090C 0%,#111318 100%);box-shadow:inset 0 2px 6px rgba(0,0,0,.65),inset 0 -1px 0 rgba(255,255,255,.05)}
 .seg button{transition:transform .08s ease,background .15s}
 .seg button[aria-pressed="false"]:hover{background:rgba(255,255,255,.05)}
@@ -230,7 +243,7 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
 <section class="wrap list" id="liste">
   <div class="list-head">
     <h2>Toute la liste</h2>
-    <p aria-live="polite" id="count-top"></p>
+    <div class="lh-right"><p aria-live="polite" id="count-top"></p><p class="sync" id="sync" hidden></p></div>
   </div>
 
   <form class="filters" id="filters" autocomplete="off">
@@ -255,6 +268,9 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
       </label>
       <label class="field" for="minImdb"><img src="logos/imdb.svg" width="30" height="15" alt="">IMDb
         <select id="minImdb"><option value="">Toutes les notes</option><option value="0-5">Moins de 5</option><option value="5-6">De 5 à 6</option><option value="6-7">De 6 à 7</option><option value="7-8">De 7 à 8</option><option value="8-99">8 et plus</option></select>
+      </label>
+      <label class="field" for="seenF"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Déjà vu
+        <select id="seenF"><option value="">Tous les titres</option><option value="no">À voir seulement</option><option value="yes">Déjà vus seulement</option></select>
       </label>
       <label class="field" for="sort" style="margin-left:auto">Trier par
         <select id="sort">
@@ -297,7 +313,7 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
   </div>
 
   <section class="savebar" id="savebar" aria-label="Modifications à enregistrer" hidden>
-    <p><span id="pending-label"></span><small>Retiré ici, sur votre appareil. Pour le retirer aussi ailleurs, touchez Netflix, Prime Video ou Apple TV, puis retirez-le de « Ma liste », de la « Liste de souhaits » ou de « À suivre » sur la page du titre.</small></p>
+    <p><span id="pending-label"></span><small><span id="rm-scope">Retiré ici, sur votre appareil.</span> Pour le retirer aussi ailleurs, touchez Netflix, Prime Video ou Apple TV, puis retirez-le de « Ma liste », de la « Liste de souhaits » ou de « À suivre » sur la page du titre.</small></p>
     <div style="display:flex;gap:8px">
       <button type="button" class="no" id="cancel">Annuler</button>
       <button type="button" class="yes" id="save">Enregistrer</button>
@@ -344,9 +360,41 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
   const dateKey=d=>{const [day,mon,yr]=d.split(' ');return (+yr)*10000+(MONTHS[mon]||0)*100+(+day)};
 
   const store={get(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-  const S={src:'all',type:'all',q:'',genre:'',minAc:'',minAcP:'',minImdb:'',sort:'pos',limit:store.get('twon-limit','10'),pending:{},removed:store.get('twon-removed',{}),hist:store.get('twon-hist',[])};
+  const S={src:'all',type:'all',q:'',genre:'',minAc:'',minAcP:'',minImdb:'',sort:'pos',limit:store.get('twon-limit','10'),pending:{},removed:store.get('twon-removed',{}),hist:store.get('twon-hist',[]),seen:store.get('twon-seen',{}),seenF:''};
   if(!S.hist.length&&Object.keys(S.removed).length) S.hist=[Object.keys(S.removed).map(Number)];
-  const persist=()=>{store.set('twon-removed',S.removed);store.set('twon-hist',S.hist);};
+  const persist=()=>{store.set('twon-removed',S.removed);store.set('twon-hist',S.hist);store.set('twon-seen',S.seen);};
+
+  // Stockage partagé (Google Apps Script) : « Déjà vu » et retraits identiques pour tous les visiteurs.
+  // Sans adresse, ou si le service ne répond pas, tout reste sur cet appareil.
+  const SYNC_URL='';
+  let syncOK=false, syncAt=null;
+  function syncStatus(){
+    const el=$('sync'); if(!SYNC_URL){el.hidden=true;return}
+    el.hidden=false; el.classList.toggle('off',!syncOK);
+    el.textContent=syncOK?'Partagé avec tous les visiteurs':'Partage indisponible : changements gardés sur cet appareil';
+    const sc=$('rm-scope'); if(sc) sc.textContent=syncOK?'Retiré pour tous les visiteurs du site.':'Retiré ici, sur votre appareil.';
+  }
+  function applyState(st){
+    if(!st||typeof st!=='object'||st.error&&!st.state) return;
+    if(st.state) st=st.state;
+    S.removed=st.removed||{}; S.hist=st.hist||[]; S.seen=st.seen||{};
+    persist(); syncOK=true; syncAt=Date.now(); syncStatus(); if(DATA.length) all();
+  }
+  async function pull(){
+    if(!SYNC_URL) return;
+    try{const r=await fetch(SYNC_URL,{cache:'no-store'}); applyState(await r.json());}
+    catch(e){syncOK=false; syncStatus();}
+  }
+  async function push(op){
+    persist();
+    if(!SYNC_URL) return;
+    try{const r=await fetch(SYNC_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(op)}); applyState(await r.json());}
+    catch(e){syncOK=false; syncStatus();}
+  }
+  if(SYNC_URL){
+    setInterval(()=>{if(document.visibilityState==='visible') pull()},30000);
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible') pull()});
+  }
   let DATA=[];
 
   const $=id=>document.getElementById(id);
@@ -362,7 +410,7 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
       const acP=d.acP==null?'<b class="na">—</b>':`<b>${fmt(d.acP)}</b>`;
       return `<article class="card">
         <div class="grow">
-          <div class="meta"><span class="rank" aria-hidden="true">0${i+1}</span><span class="pill ${pill[0]}">${pill[1]}</span><span>${p.year}</span>${d.src.map(k=>SRCBADGE[k]).join('')}</div>
+          <div class="meta"><span class="rank" aria-hidden="true">0${i+1}</span><span class="pill ${pill[0]}">${pill[1]}</span><span>${p.year}</span>${d.src.map(k=>SRCBADGE[k]).join('')}${S.seen[d.pos]?'<span class="pill seen">✓ Déjà vu</span>':''}</div>
           <h3>${esc(d.title)}</h3>
           <p class="genre">${esc(p.genre)}</p>
           <p class="sum">${esc(p.sum)}</p>
@@ -406,7 +454,8 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
       &&(!S.genre||(d.genre||'').split(' · ').includes(S.genre))
       &&inRange(d.acS,S.minAc)
       &&inRange(d.acP,S.minAcP)
-      &&inRange(d.imdb,S.minImdb));
+      &&inRange(d.imdb,S.minImdb)
+      &&(!S.seenF||(S.seenF==='yes')===!!S.seen[d.pos]));
     const desc=k=>(a,b)=>(b[k]??-1)-(a[k]??-1);
     if(S.sort==='imdb') v.sort(desc('imdb'));
     else if(S.sort==='acS') v.sort(desc('acS'));
@@ -434,7 +483,7 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
     $('rows').innerHTML=shown.map(d=>{
       const pill=PILL[d.type], isP=!!S.pending[d.pos];
       const offers=d.offers.map(([k,q,url])=>{const L=LOGO[k];if(!L)return '';return `<a class="chip" href="${esc(url||NF+d.nf)}" target="_blank" rel="noopener" aria-label="Regarder sur ${L.name}, ${q}"><img src="${L.src}" width="${L.w}" height="${L.h}" alt=""><span>${q}</span></a>`}).join('');
-      return `<li class="row${isP?' pending':''}">
+      return `<li class="row${isP?' pending':''}${S.seen[d.pos]?' seen':''}">
         <span class="pos">${d.pos}</span>
         <div class="tcell">
           <div class="txt">
@@ -447,14 +496,14 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
         <div class="c-ac"><span class="lab">AlloCiné presse · spect.</span><div class="pair"><span class="${d.acP!=null&&d.acP>=3.5?'sc press':cls(d.acP,4,2.5)}">${fmt(d.acP)}</span><span class="${cls(d.acS,4,2.5)}">${fmt(d.acS)}</span></div></div>
         <div class="c-im"><span class="lab">IMDb</span><span class="${cls(d.imdb,7.5,6)}">${fmt(d.imdb)}</span></div>
         <div class="where">${offers}</div>
-        <div class="act">${isP?`${rmLinks(d)}`:''}<button type="button" class="ghost" data-toggle="${d.pos}">${isP?'Annuler':'Retirer de la liste'}</button></div>
+        <div class="act"><button type="button" class="seenbtn" data-seen="${d.pos}" aria-pressed="${!!S.seen[d.pos]}"><span class="box"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3A2506" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Déjà vu</button>${isP?`${rmLinks(d)}`:''}<button type="button" class="ghost" data-toggle="${d.pos}">${isP?'Annuler':'Retirer de la liste'}</button></div>
       </li>`;
     }).join('');
     $('empty').hidden=shown.length>0;
     const label=`${shown.length} sur ${v.length} titres affichés`;
     $('count-top').textContent=label; $('count-bottom').textContent=label;
 
-    const active=S.src!=='all'||S.type!=='all'||S.q.trim()||S.genre||S.minAc||S.minAcP||S.minImdb;
+    const active=S.seenF||S.src!=='all'||S.type!=='all'||S.q.trim()||S.genre||S.minAc||S.minAcP||S.minImdb;
     const allP=v.length>0&&v.every(d=>S.pending[d.pos]);
     $('bulk').hidden=!active||v.length===0;
     $('bulk').textContent=allP?`Annuler le retrait des ${v.length} titres filtrés`:(v.length===1?'Retirer le titre filtré':`Retirer les ${v.length} titres filtrés`);
@@ -489,12 +538,13 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
   $('sort').addEventListener('change',e=>{S.sort=e.target.value;renderRows();});
   $('limit').value=S.limit;
   $('limit').addEventListener('change',e=>{S.limit=e.target.value;store.set('twon-limit',S.limit);renderRows();});
-  $('rows').addEventListener('click',e=>{const b=e.target.closest('[data-toggle]');if(!b)return;const p=+b.dataset.toggle;S.pending[p]=!S.pending[p];renderRows();});
+  $('rows').addEventListener('click',e=>{const sv=e.target.closest('[data-seen]');if(sv){const p=+sv.dataset.seen;const v=!S.seen[p];if(v)S.seen[p]=true;else delete S.seen[p];renderRows();if(DATA.length)renderCards();push({op:'seen',pos:p,value:v});return}const b=e.target.closest('[data-toggle]');if(!b)return;const p=+b.dataset.toggle;S.pending[p]=!S.pending[p];renderRows();});
   $('bulk').addEventListener('click',()=>{const v=filtered();const allP=v.every(d=>S.pending[d.pos]);v.forEach(d=>{S.pending[d.pos]=!allP});renderRows();});
   $('cancel').addEventListener('click',()=>{S.pending={};renderRows();});
-  $('save').addEventListener('click',()=>{const b=Object.keys(S.pending).filter(k=>S.pending[k]&&!S.removed[k]).map(Number);b.forEach(k=>{S.removed[k]=true});if(b.length)S.hist.push(b);S.pending={};persist();all();});
-  $('undo').addEventListener('click',()=>{const b=S.hist.pop()||[];b.forEach(k=>{delete S.removed[k]});persist();all();});
-  $('restore').addEventListener('click',()=>{S.removed={};S.hist=[];persist();all();});
+  $('save').addEventListener('click',()=>{const b=Object.keys(S.pending).filter(k=>S.pending[k]&&!S.removed[k]).map(Number);b.forEach(k=>{S.removed[k]=true});if(b.length)S.hist.push(b);S.pending={};all();push({op:'remove',list:b});});
+  $('undo').addEventListener('click',()=>{const b=S.hist.pop()||[];b.forEach(k=>{delete S.removed[k]});all();push({op:'undo'});});
+  $('restore').addEventListener('click',()=>{S.removed={};S.hist=[];all();push({op:'restore'});});
+  $('seenF').addEventListener('change',e=>{S.seenF=e.target.value;renderRows();});
 
   // Deux pages : « Ma liste » et « Les mieux notés », choisies par le menu du haut (#liste, #mieux-notes)
   const PAGES=['liste','mieux-notes'];
@@ -519,7 +569,7 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
     DATA=d;
     const genres=new Set(); d.forEach(x=>(x.genre||'').split(' · ').filter(Boolean).forEach(g=>genres.add(g)));
     $('genre').innerHTML='<option value="">Tous</option>'+[...genres].sort((a,b)=>a.localeCompare(b,'fr')).map(g=>`<option>${esc(g)}</option>`).join('');
-    renderCards(); all();
+    renderCards(); all(); syncStatus(); pull();
   }).catch(()=>{$('empty').hidden=false;$('empty').textContent="La liste n'a pas pu se charger. Rechargez la page."});
 })();
 </script>
