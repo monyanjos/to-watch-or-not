@@ -84,6 +84,8 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
 .rates{display:flex;flex-wrap:wrap;gap:14px 26px;padding-top:16px;border-top:1px solid var(--line)}
 .rates a{display:flex;flex-direction:column;gap:6px;text-decoration:none}
 .rates b{font-size:18px;font-variant-numeric:tabular-nums}
+.rates .avg{display:flex;flex-direction:column;gap:6px;padding-right:22px;margin-right:4px;border-right:1px solid var(--line)}
+.rates .avg b{font-family:var(--marquee);font-size:34px;line-height:20px;letter-spacing:.02em;font-weight:400;background:linear-gradient(180deg,var(--gold-hi),var(--gold) 60%,var(--gold-lo));-webkit-background-clip:text;background-clip:text;color:transparent;padding-top:6px}
 .rates b.na{font-weight:400;color:var(--faint)}
 .rates small{font-size:12px;color:var(--dim)}
 .cta{display:inline-flex;align-items:center;gap:10px;align-self:flex-start;min-height:44px;padding:0 16px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line-2);color:var(--ink);font-size:14px;font-weight:600;text-decoration:none}
@@ -340,6 +342,11 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
   };
   const NF='https://www.netflix.com/title/';
   const PICKS=[
+    {pos:43,year:2021,genre:'Crime · Action',sum:"Pour venger son père, une jeune femme s'engage dans la police comme taupe d'un cartel de la drogue.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=30045.html',imdb:'tt12940504'},
+    {pos:144,year:2023,genre:'Crime · Historique',sum:"Dans l'Oklahoma des années 1920, les membres de la nation Osage, enrichis par le pétrole, meurent un à un. Une enquête du FBI met au jour le complot.",ac:'https://www.allocine.fr/film/fichefilm_gen_cfilm=245813.html',imdb:'tt5537002'},
+    {pos:13,year:2020,genre:'Science-fiction · Thriller',sum:"Projetés dans un Tokyo désert, des joueurs doivent remporter des épreuves mortelles pour prolonger leur visa et rester en vie.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=27439.html',imdb:'tt10795658'},
+    {pos:47,year:2016,genre:'Crime · Thriller',sum:"À Miami, un banquier, une hackeuse et un gangster lancent une monnaie numérique financée par de l'argent sale.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=20225.html',imdb:'tt5028002'},
+    {pos:109,year:2018,genre:'Drame',sum:"Mexico, au début des années 1970 : la vie d'une employée de maison au service d'une famille aisée, en noir et blanc.",ac:'https://www.allocine.fr/film/fichefilm_gen_cfilm=250095.html',imdb:'tt6155172'},
     {pos:131,year:2019,genre:'Action · Science-fiction',sum:"Des super-héros adulés mais corrompus face à une bande de justiciers sans pouvoirs, décidés à les faire tomber.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=22668.html',imdb:'tt1190634'},
     {pos:146,year:2022,genre:'Espionnage · Thriller',sum:"À Londres, des agents du MI5 relégués pour leurs erreurs, sous les ordres d'un chef négligé mais redoutable, se retrouvent mêlés à de vraies affaires.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=25905.html',imdb:'tt5875444'},
     {pos:12,year:2022,genre:'Thriller · Drame',sum:"Harcelée au lycée, une femme prépare pendant des années sa vengeance contre ceux qui ont brisé sa jeunesse.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=32462.html',imdb:'tt21344706'},
@@ -407,31 +414,38 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
   const $=id=>document.getElementById(id);
 
   let PT='all';
+  // Moyenne des notes, toutes ramenées sur 10 : AlloCiné presse et spectateurs (x2) et IMDb.
+  // Un titre n'est classé que s'il a une note IMDb et au moins une note AlloCiné.
+  const avgOf=d=>{const v=[d.acP!=null?d.acP*2:null,d.acS!=null?d.acS*2:null,d.imdb].filter(x=>x!=null);return d.imdb!=null&&v.length>=2?v.reduce((a,b)=>a+b,0)/v.length:null};
   function renderCards(){
-    const pool=PICKS.map(p=>({p,d:DATA.find(x=>x.pos===p.pos)})).filter(o=>o.d&&!S.removed[o.d.pos]&&(PT==='all'||o.d.type===PT))
-      .sort((a,b)=>(b.d.imdb??0)-(a.d.imdb??0)||(b.d.acS??0)-(a.d.acS??0)).slice(0,6);
-    $('picks-sub').textContent=PT==='all'?'Les six meilleures notes IMDb, toutes listes confondues : Netflix, Prime Video et Apple TV':(PT==='Film'?'Les films les mieux notés':'Les séries les mieux notées')+' sur IMDb, toutes listes confondues';
-    $('cards').innerHTML=pool.map(({p},i)=>{
-      const d=DATA.find(x=>x.pos===p.pos); if(!d) return '';
+    const pool=DATA.map(d=>({d,avg:avgOf(d)})).filter(o=>o.avg!=null&&!S.removed[o.d.pos]&&(PT==='all'||o.d.type===PT))
+      .sort((a,b)=>b.avg-a.avg||(b.d.imdb??0)-(a.d.imdb??0)).slice(0,6);
+    $('picks-sub').textContent=(PT==='all'?'Les six titres':PT==='Film'?'Les six films':'Les six séries')+' à la meilleure moyenne AlloCiné presse, AlloCiné spectateurs et IMDb, ramenée sur 10';
+    $('cards').innerHTML=pool.map(({d,avg},i)=>{
+      const p=PICKS.find(x=>x.pos===d.pos)||{year:(d.date||'').slice(-4),genre:d.genre||'',sum:d.note||'',ac:d.acUrl,imdb:d.imdbId};
+      const ac=p.ac||d.acUrl||('https://www.allocine.fr/rechercher/?q='+encodeURIComponent(d.title));
+      const im=p.imdb||d.imdbId?'https://www.imdb.com/title/'+(p.imdb||d.imdbId)+'/':'https://www.imdb.com/find/?q='+encodeURIComponent(d.title);
       const pill=PILL[d.type];
       const acP=d.acP==null?'<b class="na">—</b>':`<b>${fmt(d.acP)}</b>`;
       return `<article class="card">
         <div class="grow">
-          <div class="meta"><span class="rank" aria-hidden="true">0${i+1}</span><span class="pill ${pill[0]}">${pill[1]}</span><span>${p.year}</span>${d.src.map(k=>SRCBADGE[k]).join('')}${S.seen[d.pos]?'<span class="pill seen">✓ Déjà vu</span>':''}</div>
+          <div class="meta"><span class="rank" aria-hidden="true">0${i+1}</span><span class="pill ${pill[0]}">${pill[1]}</span><span>${esc(p.year)}</span>${d.src.map(k=>SRCBADGE[k]).join('')}${S.seen[d.pos]?'<span class="pill seen">✓ Déjà vu</span>':''}</div>
           <h3>${esc(d.title)}</h3>
           <p class="genre">${esc(p.genre)}</p>
-          <p class="sum">${esc(p.sum)}</p>
+          ${p.sum?`<p class="sum">${esc(p.sum)}</p>`:''}
         </div>
         <div class="rates">
-          <a href="${p.ac}" target="_blank" rel="noopener"><img src="logos/allocine-ticket.svg" width="14" height="20" alt="AlloCiné">${acP}<small>presse</small></a>
-          <a href="${p.ac}" target="_blank" rel="noopener"><img src="logos/allocine-ticket.svg" width="14" height="20" alt="AlloCiné"><b>${fmt(d.acS)}</b><small>spectateurs</small></a>
-          <a href="https://www.imdb.com/title/${p.imdb}/" target="_blank" rel="noopener"><img src="logos/imdb.svg" width="40" height="20" alt="IMDb"><b>${fmt(d.imdb)}</b><small>sur 10</small></a>
+          <div class="avg"><b>${fmt(avg)}</b><small>moyenne sur 10</small></div>
+          <a href="${esc(ac)}" target="_blank" rel="noopener"><img src="logos/allocine-ticket.svg" width="14" height="20" alt="AlloCiné">${acP}<small>presse</small></a>
+          <a href="${esc(ac)}" target="_blank" rel="noopener"><img src="logos/allocine-ticket.svg" width="14" height="20" alt="AlloCiné"><b>${fmt(d.acS)}</b><small>spectateurs</small></a>
+          <a href="${esc(im)}" target="_blank" rel="noopener"><img src="logos/imdb.svg" width="40" height="20" alt="IMDb"><b>${fmt(d.imdb)}</b><small>sur 10</small></a>
         </div>
         <a class="cta" href="${esc(titleUrl(d))}" target="_blank" rel="noopener">Regarder sur ${CTALOGO[d.src[0]]}</a>
         <img src="${d.poster}" alt="" loading="lazy">
       </article>`;
     }).join('');
   }
+
 
   function renderSrcs(){
     const live=DATA.filter(d=>!S.removed[d.pos]);
