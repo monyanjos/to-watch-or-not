@@ -202,8 +202,15 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
 
 <section class="wrap picks" id="mieux-notes">
   <div class="picks-head">
-    <h2>Les mieux notés</h2>
-    <p>Les six meilleures notes IMDb, toutes listes confondues : Netflix, Prime Video et Apple TV</p>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h2>Les mieux notés</h2>
+      <fieldset class="seg" id="pick-types" style="align-self:flex-start"><legend class="sr">Type</legend>
+        <button type="button" data-ptype="all" aria-pressed="true">Tout</button>
+        <button type="button" data-ptype="Série" aria-pressed="false">Séries</button>
+        <button type="button" data-ptype="Film" aria-pressed="false">Films</button>
+      </fieldset>
+    </div>
+    <p id="picks-sub">Les six meilleures notes IMDb, toutes listes confondues : Netflix, Prime Video et Apple TV</p>
   </div>
   <div class="cards" id="cards"></div>
 </section>
@@ -303,7 +310,13 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
     {pos:12,year:2022,genre:'Thriller · Drame',sum:"Harcelée au lycée, une femme prépare pendant des années sa vengeance contre ceux qui ont brisé sa jeunesse.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=32462.html',imdb:'tt21344706'},
     {pos:116,year:2002,genre:'Crime · Biopic',sum:"Dans les années 1960, un jeune faussaire de génie se fait passer pour pilote, médecin ou avocat, traqué par un agent du FBI.",ac:'https://www.allocine.fr/film/fichefilm_gen_cfilm=35973.html',imdb:'tt0264464'},
     {pos:140,year:2023,genre:'Science-fiction · Mystère',sum:"Les derniers humains vivent dans un silo géant enfoui sous terre. Une ingénieure commence à douter de ce qu'on leur raconte sur le monde extérieur.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=29245.html',imdb:'tt14688458'},
-    {pos:143,year:2019,genre:'Science-fiction · Drame',sum:"Et si l'URSS avait marché la première sur la Lune ? La course à l'espace ne s'arrête jamais, et l'histoire change de cap.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=23080.html',imdb:'tt7772588'}
+    {pos:143,year:2019,genre:'Science-fiction · Drame',sum:"Et si l'URSS avait marché la première sur la Lune ? La course à l'espace ne s'arrête jamais, et l'histoire change de cap.",ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=23080.html',imdb:'tt7772588'},
+    {pos:23,year:2018,genre:'Comédie · Crime',sum:'Deux ados en marge, James et Alyssa, fuguent ensemble. Leur road trip improvisé bascule vite dans le drame.',ac:'https://www.allocine.fr/series/ficheserie_gen_cserie=22881.html',imdb:'tt6257970'},
+    {pos:117,year:2017,genre:'Horreur · Thriller',sum:"Un jeune photographe noir rencontre la famille de sa petite amie blanche, le temps d'un week-end. L'accueil trop parfait cache quelque chose.",ac:'https://www.allocine.fr/film/fichefilm_gen_cfilm=241160.html',imdb:'tt5052448'},
+    {pos:77,year:2020,genre:'Historique · Drame',sum:"Le procès de sept militants accusés d'avoir provoqué les émeutes de la convention démocrate de Chicago, en 1968.",ac:'https://www.allocine.fr/film/fichefilm_gen_cfilm=130085.html',imdb:'tt1070874'},
+    {pos:115,year:2022,genre:'Drame',sum:"Un professeur d'anglais reclus et en grande souffrance tente de renouer avec sa fille adolescente.",ac:'https://www.allocine.fr/film/fichefilm_gen_cfilm=289056.html',imdb:'tt13833688'},
+    {pos:114,year:2008,genre:'Thriller · Drame',sum:"Dans un lycée allemand, un professeur lance une expérience sur l'autocratie. En quelques jours, le jeu échappe à tout contrôle.",ac:'https://www.allocine.fr/film/fichefilm_gen_cfilm=134390.html',imdb:'tt1063669'},
+    {pos:119,year:2019,genre:'Comédie · Drame',sum:"Los Angeles, 1969 : un acteur de western sur le déclin et sa doublure cascadeur, voisins de Sharon Tate, cherchent leur place dans un Hollywood qui change.",ac:'https://www.allocine.fr/film/fichefilm_gen_cfilm=257482.html',imdb:'tt7131622'}
   ];
   const SRCS=[{id:'all',label:'Toutes les listes'},{id:'nf',img:'<img src="logos/netflix.svg" width="52" height="14" alt="Netflix">'},{id:'pv',img:'<img class="inv" src="logos/primevideo-white.svg" width="52" height="16" alt="Prime Video">'},{id:'atv',img:'<img class="inv" src="logos/appletv-white.svg" width="22" height="22" alt="Apple TV">'}];
   const SRCBADGE={nf:'<span class="src" title="Ma liste Netflix"><img src="logos/netflix-n.svg" width="8" height="14" alt="Netflix"></span>',pv:'<span class="src" title="Liste de favoris Prime Video"><img src="logos/primevideo-white.svg" width="38" height="12" alt="Prime Video"></span>',atv:'<span class="src" title="À suivre Apple TV"><img src="logos/appletv-white.svg" width="16" height="16" alt="Apple TV"></span>'};
@@ -326,8 +339,12 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
 
   const $=id=>document.getElementById(id);
 
+  let PT='all';
   function renderCards(){
-    $('cards').innerHTML=PICKS.map((p,i)=>{
+    const pool=PICKS.map(p=>({p,d:DATA.find(x=>x.pos===p.pos)})).filter(o=>o.d&&!S.removed[o.d.pos]&&(PT==='all'||o.d.type===PT))
+      .sort((a,b)=>(b.d.imdb??0)-(a.d.imdb??0)||(b.d.acS??0)-(a.d.acS??0)).slice(0,6);
+    $('picks-sub').textContent=PT==='all'?'Les six meilleures notes IMDb, toutes listes confondues : Netflix, Prime Video et Apple TV':(PT==='Film'?'Les films les mieux notés':'Les séries les mieux notées')+' sur IMDb, toutes listes confondues';
+    $('cards').innerHTML=pool.map(({p},i)=>{
       const d=DATA.find(x=>x.pos===p.pos); if(!d) return '';
       const pill=PILL[d.type];
       const acP=d.acP==null?'<b class="na">—</b>':`<b>${fmt(d.acP)}</b>`;
@@ -446,9 +463,10 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
     const dd=$('counts').querySelectorAll('dd'); dd[0].textContent=c['Série']; dd[1].textContent=c['Film']; dd[2].textContent=c['Documentaire'];
   }
 
-  function all(){renderSrcs();renderTypes();renderRows();counts();}
+  function all(){if(DATA.length)renderCards();renderSrcs();renderTypes();renderRows();counts();}
 
   $('srcs').addEventListener('click',e=>{const b=e.target.closest('button[data-src]');if(!b)return;S.src=b.dataset.src;renderSrcs();renderTypes();renderRows();});
+  $('pick-types').addEventListener('click',e=>{const b=e.target.closest('button[data-ptype]');if(!b)return;PT=b.dataset.ptype;$('pick-types').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderCards();});
   $('types').addEventListener('click',e=>{const b=e.target.closest('button[data-type]');if(!b)return;S.type=b.dataset.type;renderTypes();renderRows();});
   $('filters').addEventListener('submit',e=>e.preventDefault());
   $('q').addEventListener('input',e=>{S.q=e.target.value;renderRows();});
