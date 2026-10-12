@@ -496,6 +496,25 @@ h2{font-family:var(--display);font-size:40px;line-height:1;font-weight:800;font-
   $('undo').addEventListener('click',()=>{const b=S.hist.pop()||[];b.forEach(k=>{delete S.removed[k]});persist();all();});
   $('restore').addEventListener('click',()=>{S.removed={};S.hist=[];persist();all();});
 
+  // Deux pages : « Ma liste » et « Les mieux notés », choisies par le menu du haut (#liste, #mieux-notes)
+  const PAGES=['liste','mieux-notes'];
+  function showPage(id,scroll){
+    if(!PAGES.includes(id)) id='liste';
+    PAGES.forEach(p=>{$(p).hidden=p!==id});
+    document.querySelectorAll('.top nav a').forEach(a=>{if(a.getAttribute('href')==='#'+id)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+    if(scroll) window.scrollTo(0,0);
+  }
+  document.querySelector('.top nav').addEventListener('click',e=>{
+    const a=e.target.closest('a[href^="#"]'); if(!a) return;
+    e.preventDefault(); const id=a.getAttribute('href').slice(1);
+    try{history.pushState(null,'','#'+id)}catch(err){}
+    showPage(id,true);
+  });
+  document.querySelector('.brand').addEventListener('click',e=>{e.preventDefault();window.scrollTo(0,0)});
+  window.addEventListener('hashchange',()=>showPage(location.hash.slice(1),true));
+  window.addEventListener('popstate',()=>showPage(location.hash.slice(1),true));
+  showPage(location.hash.slice(1),false);
+
   fetch('data.json').then(r=>r.json()).then(d=>{
     DATA=d;
     const genres=new Set(); d.forEach(x=>(x.genre||'').split(' · ').filter(Boolean).forEach(g=>genres.add(g)));
