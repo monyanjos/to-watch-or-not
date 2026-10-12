@@ -182,6 +182,30 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
 .row.seen .tline a{color:var(--muted)}
 .row.seen .poster{filter:saturate(.45) brightness(.8)}
 .pill.seen{background:rgba(242,180,58,.16);color:var(--gold-hi)}
+/* Filtres sur téléphone : listes et types en bandeaux qui défilent, autres filtres repliés */
+.ftoggle{display:none}
+.flab{display:inline-flex;align-items:center;gap:8px}
+@media (max-width:640px){
+  .filters{padding:10px;gap:8px}
+  .frow{gap:8px}
+  #filters .seg{flex-wrap:nowrap;overflow-x:auto;width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #filters .seg::-webkit-scrollbar{display:none}
+  #filters .seg button{flex:none;font-size:14px;min-height:40px;padding:0 12px;gap:6px}
+  #filters .seg button small{font-size:12px}
+  #filters .seg button img{max-height:16px;width:auto}
+  .field.search{flex:1 1 0}
+  .ftoggle{display:inline-flex;align-items:center;gap:8px;flex:none;min-height:44px;padding:0 14px;border-radius:10px;font:inherit;font-size:14px;font-weight:700;color:var(--ink);cursor:pointer;background:linear-gradient(180deg,#272B36 0%,#181A21 100%);border:1px solid #2F3442;border-top-color:#444A5C;border-bottom-color:#0C0D11;box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 0 #07080B}
+  .ftoggle[aria-expanded="true"]{border-color:var(--gold);color:var(--gold-hi)}
+  .fcount{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--gold);color:#1A1206;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+  #filters .seg .lg{display:none}
+  #filters .seg{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+  .frow.more{display:none}
+  .frow.more.open{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .frow.more .field{flex-direction:column;align-items:stretch;gap:2px;min-height:0;padding:7px 10px;margin-left:0!important}
+  .frow.more .flab{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;gap:6px}
+  .frow.more .flab img{height:14px;width:auto}
+  .frow.more select{width:100%;font-size:14px;padding:2px 0}
+}
 /* Relief : boutons et champs en léger 3D, comme des touches éclairées par le haut */
 .field,.ghost,.cta,.chip,.seenbtn{background:linear-gradient(180deg,#272B36 0%,#181A21 100%);border:1px solid #2F3442;border-top-color:#444A5C;border-bottom-color:#0C0D11;box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 0 #07080B,0 6px 14px rgba(0,0,0,.45);transition:transform .08s ease,box-shadow .08s ease,border-color .15s}
 .chip{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 2px 0 #07080B,0 3px 8px rgba(0,0,0,.35)}
@@ -264,24 +288,25 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
         <span class="sr">Rechercher un titre</span>
         <input type="search" id="q" placeholder="Rechercher un titre…">
       </label>
+      <button type="button" class="ftoggle" id="ftoggle" aria-expanded="false" aria-controls="more-filters"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Filtres<span class="fcount" id="fcount" hidden></span></button>
     </div>
-    <div class="frow">
-      <label class="field" for="genre">Genre
+    <div class="frow more" id="more-filters">
+      <label class="field" for="genre"><span class="flab">Genre</span>
         <select id="genre"><option value="">Tous</option></select>
       </label>
-      <label class="field" for="minAcP"><img src="logos/allocine-ticket.svg" width="13" height="18" alt="">AlloCiné presse
+      <label class="field" for="minAcP"><span class="flab"><img src="logos/allocine-ticket.svg" width="13" height="18" alt="">AlloCiné presse</span>
         <select id="minAcP"><option value="">Toutes les notes</option><option value="0-2.5">Moins de 2,5</option><option value="2.5-3">De 2,5 à 3</option><option value="3-3.5">De 3 à 3,5</option><option value="3.5-4">De 3,5 à 4</option><option value="4-99">4 et plus</option></select>
       </label>
-      <label class="field" for="minAc"><img src="logos/allocine-ticket.svg" width="13" height="18" alt="">AlloCiné spectateurs
+      <label class="field" for="minAc"><span class="flab"><img src="logos/allocine-ticket.svg" width="13" height="18" alt="">AlloCiné spectateurs</span>
         <select id="minAc"><option value="">Toutes les notes</option><option value="0-2.5">Moins de 2,5</option><option value="2.5-3">De 2,5 à 3</option><option value="3-3.5">De 3 à 3,5</option><option value="3.5-4">De 3,5 à 4</option><option value="4-99">4 et plus</option></select>
       </label>
-      <label class="field" for="minImdb"><img src="logos/imdb.svg" width="30" height="15" alt="">IMDb
+      <label class="field" for="minImdb"><span class="flab"><img src="logos/imdb.svg" width="30" height="15" alt="">IMDb</span>
         <select id="minImdb"><option value="">Toutes les notes</option><option value="0-5">Moins de 5</option><option value="5-6">De 5 à 6</option><option value="6-7">De 6 à 7</option><option value="7-8">De 7 à 8</option><option value="8-99">8 et plus</option></select>
       </label>
-      <label class="field" for="seenF"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Déjà vu
+      <label class="field" for="seenF"><span class="flab"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Déjà vu</span>
         <select id="seenF"><option value="">Tous les titres</option><option value="no">À voir seulement</option><option value="yes">Déjà vus seulement</option></select>
       </label>
-      <label class="field" for="sort" style="margin-left:auto">Trier par
+      <label class="field" for="sort" style="margin-left:auto"><span class="flab">Trier par</span>
         <select id="sort">
           <option value="pos">Ordre de Ma liste</option>
           <option value="imdb">Note IMDb</option>
@@ -360,11 +385,11 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
     {pos:114,year:2008,genre:'Thriller · Drame',sum:"Dans un lycée allemand, un professeur lance une expérience sur l'autocratie. En quelques jours, le jeu échappe à tout contrôle.",ac:'https://www.allocine.fr/film/fichefilm_gen_cfilm=134390.html',imdb:'tt1063669'},
     {pos:119,year:2019,genre:'Comédie · Drame',sum:"Los Angeles, 1969 : un acteur de western sur le déclin et sa doublure cascadeur, voisins de Sharon Tate, cherchent leur place dans un Hollywood qui change.",ac:'https://www.allocine.fr/film/fichefilm_gen_cfilm=257482.html',imdb:'tt7131622'}
   ];
-  const SRCS=[{id:'all',label:'Toutes les listes'},{id:'nf',img:'<img src="logos/netflix.svg" width="68" height="18" alt="Netflix">'},{id:'pv',img:'<img class="inv" src="logos/primevideo-white.svg" width="66" height="21" alt="Prime Video">'},{id:'atv',img:'<img class="inv" src="logos/appletv-white.svg" width="28" height="28" alt="Apple TV">'}];
+  const SRCS=[{id:'all',label:'<span>Toutes<span class="lg"> les listes</span></span>'},{id:'nf',img:'<img src="logos/netflix.svg" width="68" height="18" alt="Netflix">'},{id:'pv',img:'<img class="inv" src="logos/primevideo-white.svg" width="66" height="21" alt="Prime Video">'},{id:'atv',img:'<img class="inv" src="logos/appletv-white.svg" width="28" height="28" alt="Apple TV">'}];
   const SRCBADGE={nf:'<span class="src" title="Ma liste Netflix"><img src="logos/netflix-n.svg" width="8" height="14" alt="Netflix"></span>',pv:'<span class="src" title="Liste de favoris Prime Video"><img src="logos/primevideo-white.svg" width="38" height="12" alt="Prime Video"></span>',atv:'<span class="src" title="À suivre Apple TV"><img src="logos/appletv-white.svg" width="16" height="16" alt="Apple TV"></span>'};
   const CTALOGO={nf:'<img src="logos/netflix.svg" width="52" height="14" alt="Netflix">',pv:'<img src="logos/primevideo-white.svg" width="52" height="16" alt="Prime Video">',atv:'<img src="logos/appletv-white.svg" width="20" height="20" alt=""> Apple TV'};
   const titleUrl=d=>d.nf?NF+d.nf:d.pv?'https://www.primevideo.com/detail/'+d.pv:d.atv;
-  const TYPES=[{id:'all',label:'Tout'},{id:'Série',label:'Séries'},{id:'Film',label:'Films'},{id:'Documentaire',label:'Documentaires'}];
+  const TYPES=[{id:'all',label:'Tout'},{id:'Série',label:'Séries'},{id:'Film',label:'Films'},{id:'Documentaire',label:'<span>Doc<span class="lg">umentaire</span>s</span>'}];
   const PILL={'Série':['serie','Série'],'Film':['film','Film'],'Documentaire':['doc','Doc']};
   const MONTHS={'janv.':1,'févr.':2,'mars':3,'avr.':4,'mai':5,'juin':6,'juil.':7,'août':8,'sept.':9,'oct.':10,'nov.':11,'déc.':12};
 
@@ -524,6 +549,8 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
     const label=`${shown.length} sur ${v.length} titres affichés`;
     $('count-top').textContent=label; $('count-bottom').textContent=label;
 
+    const nF=[S.genre,S.minAcP,S.minAc,S.minImdb,S.seenF,S.sort!=='pos'].filter(Boolean).length;
+    $('fcount').hidden=!nF; $('fcount').textContent=nF;
     const active=S.seenF||S.src!=='all'||S.type!=='all'||S.q.trim()||S.genre||S.minAc||S.minAcP||S.minImdb;
     const allP=v.length>0&&v.every(d=>S.pending[d.pos]);
     $('bulk').hidden=!active||v.length===0;
@@ -566,6 +593,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
   $('undo').addEventListener('click',()=>{const b=S.hist.pop()||[];b.forEach(k=>{delete S.removed[k]});all();push({op:'undo'});});
   $('restore').addEventListener('click',()=>{S.removed={};S.hist=[];all();push({op:'restore'});});
   $('seenF').addEventListener('change',e=>{S.seenF=e.target.value;renderRows();});
+  $('ftoggle').addEventListener('click',()=>{const o=$('more-filters').classList.toggle('open');$('ftoggle').setAttribute('aria-expanded',o);});
 
   // Deux pages : « Ma liste » et « Les mieux notés », choisies par le menu du haut (#liste, #mieux-notes)
   const PAGES=['liste','mieux-notes'];
