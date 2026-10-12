@@ -81,10 +81,10 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
 .card .genre{margin:0;font-size:14px;font-weight:600;color:var(--muted)}
 .card .sum{margin:0;font-size:13px;line-height:1.45;color:var(--dim)}
 .card .grow{flex-grow:1;display:flex;flex-direction:column;gap:10px}
-.rates{display:flex;flex-wrap:wrap;gap:14px 26px;padding-top:16px;border-top:1px solid var(--line)}
+.rates{display:flex;flex-wrap:wrap;gap:12px 18px;padding-top:16px;border-top:1px solid var(--line)}
 .rates a{display:flex;flex-direction:column;gap:6px;text-decoration:none}
 .rates b{font-size:18px;font-variant-numeric:tabular-nums}
-.rates .avg{display:flex;flex-direction:column;gap:6px;padding-right:22px;margin-right:4px;border-right:1px solid var(--line)}
+.rates .avg{display:flex;flex-direction:column;gap:6px;padding-right:16px;margin-right:0;border-right:1px solid var(--line)}
 .rates .avg b{font-family:var(--marquee);font-size:34px;line-height:20px;letter-spacing:.02em;font-weight:400;background:linear-gradient(180deg,var(--gold-hi),var(--gold) 60%,var(--gold-lo));-webkit-background-clip:text;background-clip:text;color:transparent;padding-top:6px}
 .rates b.na{font-weight:400;color:var(--faint)}
 .rates small{font-size:12px;color:var(--dim)}
@@ -299,7 +299,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
       <span>N°</span>
       <div style="display:flex;justify-content:space-between;gap:16px"><span>Titre</span><span style="width:44px;text-align:center">Affiche</span></div>
       <span>Sortie</span>
-      <div class="stack"><img src="logos/allocine-light.svg" width="74" height="16" alt="AlloCiné"><div class="pair"><span>Presse</span><span>Spect.</span></div></div>
+      <div class="stack"><span style="display:flex;align-items:center;gap:8px"><img src="logos/allocine-light.svg" width="74" height="16" alt="AlloCiné"><span>sur 5</span></span><div class="pair"><span>Presse</span><span>Spect.</span></div></div>
       <div class="stack"><img src="logos/imdb.svg" width="36" height="18" alt="IMDb"><span>Sur 10</span></div>
       <div class="stack"><span style="display:flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-weight:500">via <img src="logos/justwatch.svg" width="68" height="11" alt="JustWatch"></span><span>Où regarder</span></div>
       <span class="sr">Actions</span>
@@ -436,8 +436,8 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
         </div>
         <div class="rates">
           <div class="avg"><b>${fmt(avg)}</b><small>moyenne sur 10</small></div>
-          <a href="${esc(ac)}" target="_blank" rel="noopener"><img src="logos/allocine-ticket.svg" width="14" height="20" alt="AlloCiné">${acP}<small>presse</small></a>
-          <a href="${esc(ac)}" target="_blank" rel="noopener"><img src="logos/allocine-ticket.svg" width="14" height="20" alt="AlloCiné"><b>${fmt(d.acS)}</b><small>spectateurs</small></a>
+          <a href="${esc(ac)}" target="_blank" rel="noopener"><img src="logos/allocine-ticket.svg" width="14" height="20" alt="AlloCiné">${acP}<small>presse, sur 5</small></a>
+          <a href="${esc(ac)}" target="_blank" rel="noopener"><img src="logos/allocine-ticket.svg" width="14" height="20" alt="AlloCiné"><b>${fmt(d.acS)}</b><small>spect., sur 5</small></a>
           <a href="${esc(im)}" target="_blank" rel="noopener"><img src="logos/imdb.svg" width="40" height="20" alt="IMDb"><b>${fmt(d.imdb)}</b><small>sur 10</small></a>
         </div>
         <a class="cta" href="${esc(titleUrl(d))}" target="_blank" rel="noopener">Regarder sur ${CTALOGO[d.src[0]]}</a>
@@ -514,8 +514,8 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
           <img class="poster" src="${d.poster}" alt="" loading="lazy" width="44" height="63">
         </div>
         <span class="date"><span class="lab">Sortie</span>${esc(d.date)}</span>
-        <div class="c-ac"><span class="lab">AlloCiné presse · spect.</span><div class="pair"><span class="${d.acP!=null&&d.acP>=3.5?'sc press':cls(d.acP,4,2.5)}">${fmt(d.acP)}</span><span class="${d.acS!=null&&d.acS>=4?'sc press':cls(d.acS,4,2.5)}">${fmt(d.acS)}</span></div></div>
-        <div class="c-im"><span class="lab">IMDb</span><span class="${d.imdb!=null&&d.imdb>=7?'sc press':cls(d.imdb,7,6)}">${fmt(d.imdb)}</span></div>
+        <div class="c-ac"><span class="lab">AlloCiné presse · spect. (sur 5)</span><div class="pair"><span class="${d.acP!=null&&d.acP>=3.5?'sc press':cls(d.acP,4,2.5)}">${fmt(d.acP)}</span><span class="${d.acS!=null&&d.acS>=4?'sc press':cls(d.acS,4,2.5)}">${fmt(d.acS)}</span></div></div>
+        <div class="c-im"><span class="lab">IMDb (sur 10)</span><span class="${d.imdb!=null&&d.imdb>=7?'sc press':cls(d.imdb,7,6)}">${fmt(d.imdb)}</span></div>
         <div class="where">${offers}</div>
         <div class="act"><button type="button" class="seenbtn" data-seen="${d.pos}" aria-pressed="${!!S.seen[d.pos]}"><span class="box"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3A2506" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Déjà vu</button>${isP?`${rmLinks(d)}`:''}<button type="button" class="ghost" data-toggle="${d.pos}">${isP?'Annuler':'Retirer de la liste'}</button></div>
       </li>`;
