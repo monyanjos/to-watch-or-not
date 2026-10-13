@@ -124,7 +124,8 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
 .tline{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
 .tline a{font-size:16px;font-weight:600;line-height:1.3;text-decoration:none}
 .tline .g{font-size:13px;font-weight:600;color:var(--muted)}
-.note{font-size:13px;line-height:1.4;color:var(--dim)}
+.note{font-size:12px;line-height:1.4;color:var(--faint);font-style:italic}
+.desc{font-size:13px;line-height:1.45;color:var(--muted);max-width:62ch}
 .poster{flex:none;width:44px;height:63px;object-fit:cover;border-radius:6px;border:1px solid var(--line-2);background:var(--surface-2);box-shadow:0 6px 16px rgba(0,0,0,.45)}
 .date{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
 .where{display:flex;flex-wrap:wrap;gap:6px}
@@ -445,7 +446,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
       .sort((a,b)=>b.avg-a.avg||(b.d.imdb??0)-(a.d.imdb??0)).slice(0,6);
     $('picks-sub').textContent=(PT==='all'?'Les six titres':PT==='Film'?'Les six films':'Les six séries')+' à la meilleure moyenne AlloCiné presse, AlloCiné spectateurs et IMDb, ramenée sur 10';
     $('cards').innerHTML=pool.map(({d,avg},i)=>{
-      const p=PICKS.find(x=>x.pos===d.pos)||{year:(d.date||'').slice(-4),genre:d.genre||'',sum:d.note||'',ac:d.acUrl,imdb:d.imdbId};
+      const p=PICKS.find(x=>x.pos===d.pos)||{year:(d.date||'').slice(-4),genre:d.genre||'',sum:d.sum||d.note||'',ac:d.acUrl,imdb:d.imdbId};
       const ac=p.ac||d.acUrl||('https://www.allocine.fr/rechercher/?q='+encodeURIComponent(d.title));
       const im=p.imdb||d.imdbId?'https://www.imdb.com/title/'+(p.imdb||d.imdbId)+'/':'https://www.imdb.com/find/?q='+encodeURIComponent(d.title);
       const pill=PILL[d.type];
@@ -532,6 +533,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
         <div class="tcell">
           <div class="txt">
             <div class="tline"><a href="${titleUrl(d)}" target="_blank" rel="noopener">${esc(d.title)}</a>${(d.src||[]).map(k=>SRCBADGE[k]).join('')}<span class="pill ${pill[0]}">${pill[1]}</span>${d.genre?`<span class="g">${esc(d.genre)}</span>`:''}</div>
+            ${d.sum?`<span class="desc">${esc(d.sum)}</span>`:''}
             ${d.note?`<span class="note">${esc(d.note)}</span>`:''}
           </div>
           <img class="poster" src="${d.poster}" alt="" loading="lazy" width="44" height="63">
