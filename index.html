@@ -524,11 +524,11 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
   function renderRows(){
     const v=filtered();
     const shown=S.limit==='all'?v:v.slice(0,+S.limit);
-    $('rows').innerHTML=shown.map(d=>{
+    $('rows').innerHTML=shown.map((d,i)=>{
       const pill=PILL[d.type], isP=!!S.pending[d.pos];
       const offers=d.offers.map(([k,q,url])=>{const L=LOGO[k];if(!L)return '';return `<a class="chip" href="${esc(url||NF+d.nf)}" target="_blank" rel="noopener" aria-label="Regarder sur ${L.name}, ${q}"><img src="${L.src}" width="${L.w}" height="${L.h}" alt=""><span>${q}</span></a>`}).join('');
       return `<li class="row${isP?' pending':''}${S.seen[d.pos]?' seen':''}">
-        <span class="pos">${d.pos}</span>
+        <span class="pos">${i+1}</span>
         <div class="tcell">
           <div class="txt">
             <div class="tline"><a href="${titleUrl(d)}" target="_blank" rel="noopener">${esc(d.title)}</a>${(d.src||[]).map(k=>SRCBADGE[k]).join('')}<span class="pill ${pill[0]}">${pill[1]}</span>${d.genre?`<span class="g">${esc(d.genre)}</span>`:''}</div>
