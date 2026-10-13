@@ -101,14 +101,27 @@ def build(pos, src, ref, title):
             "offers": off, "note": None, "genre": genre, "poster": poster, "acUrl": acurl}
 
 
+NAMES = {'nf': 'Netflix', 'pv': 'Prime Video', 'atv': 'Apple TV'}
+
+
+def journal(*cols):
+    """Ajoute une ligne horodatée à journal.log : date | plateforme | statut | détails."""
+    line = time.strftime('%Y-%m-%d %H:%M:%S') + ' | ' + ' | '.join(str(c) for c in cols)
+    with open(os.path.join(HERE, 'journal.log'), 'a') as f:
+        f.write(line + '\n')
+
+
 def main():
     lists = json.load(open(os.path.join(HERE, 'lists.json')))
+    errors = lists.get('errors') or {}
     data = json.load(open(DATA))
     added, removed, posters = [], [], []
+    by = {s: {'added': [], 'removed': []} for s in NAMES}
     nxt = max(x['pos'] for x in data) + 1
     for src in ('nf', 'pv', 'atv'):
         items = lists.get(src)
         if items is None:
+            journal(NAMES[src], 'NON LU', errors.get(src) or 'liste non lue (aucun message transmis)')
             continue
         urls = {}
         if src == 'atv':  # Apple TV : les liens varient (épisode, série), on rapproche par le nom
@@ -121,6 +134,7 @@ def main():
         for x in data:
             if src in x.get('src', []) and refof(x) not in now:
                 x['src'].remove(src)
+                by[src]['removed'].append(x['title'])
                 if not x['src']:
                     removed.append(x['title'])
         data = [x for x in data if x.get('src')]
@@ -133,6 +147,7 @@ def main():
             link = (urls.get(ref) or 'https://tv.apple.com/fr/search?term=' + urllib.parse.quote(title)) if src == 'atv' else ref
             if ex:  # déjà présent depuis une autre plateforme
                 ex['src'].append(src)
+                by[src]['added'].append(ex['title'])
                 ex[src] = link
                 if src == 'atv':
                     ex['atvKey'] = ref
@@ -144,10 +159,14 @@ def main():
             data.append(it)
             byname[norm(it['title'])] = it
             added.append(f"{it['title']} ({src})")
+            by[src]['added'].append(it['title'])
             if it['poster']:
                 posters.append(it['poster'])
             time.sleep(.4)
+        a, r = by[src]['added'], by[src]['removed']
+        journal(NAMES[src], 'lu', f'{len(items)} titres', f'+{len(a)} ' + (', '.join(a) or '-'), f'-{len(r)} ' + (', '.join(r) or '-'))
     json.dump(data, open(DATA, 'w'), ensure_ascii=False)
+    journal('Site', 'data.json', f'{len(data)} titres au total')
     ch = {"added": added, "removed": removed, "posters": posters, "total": len(data)}
     json.dump(ch, open(os.path.join(HERE, 'changes.json'), 'w'), ensure_ascii=False, indent=1)
     print(json.dumps(ch, ensure_ascii=False))
