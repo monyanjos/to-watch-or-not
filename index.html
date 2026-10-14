@@ -304,7 +304,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
       <label class="field search" for="q">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
         <span class="sr">Rechercher un titre</span>
-        <input type="search" id="q" placeholder="Rechercher un titre…">
+        <input type="search" id="q" placeholder="Rechercher ou ajouter un titre…">
       </label>
       <button type="button" class="addbtn" id="addbtn" hidden aria-expanded="false" aria-controls="addpanel"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Ajouter</button>
       <button type="button" class="ftoggle" id="ftoggle" aria-expanded="false" aria-controls="more-filters"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Filtres<span class="fcount" id="fcount" hidden></span></button>
@@ -340,13 +340,9 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
 
   <section class="addpanel" id="addpanel" hidden aria-label="Ajouter un titre">
     <div class="addhead">
-      <h3>Ajouter un titre</h3>
+      <h3 id="addtitle">Ajouter à la liste</h3>
       <button type="button" class="ghost" id="addclose">Fermer</button>
     </div>
-    <form class="addrow" id="addform" autocomplete="off">
-      <label class="field search" for="addq"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span class="sr">Nom du film ou de la série</span><input type="search" id="addq" placeholder="Nom du film ou de la série…"></label>
-      <button type="submit" class="cta">Chercher</button>
-    </form>
     <p class="addmsg" id="addmsg" aria-live="polite"></p>
     <ul class="addres" id="addres"></ul>
   </section>
@@ -597,7 +593,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
     if(!shown.length){
       const q=S.q.trim();
       $('empty').innerHTML=q&&SYNC_URL
-        ?`« ${esc(q)} » n'est pas dans la liste. <button type="button" class="addbtn" id="addfromq" style="margin-left:8px">+ Chercher « ${esc(q)} » pour l'ajouter</button>`
+        ?`« ${esc(q)} » n'est pas encore dans la liste : choisissez-le plus haut, dans « Ajouter à la liste ».`
         :'Aucun titre ne correspond à ces filtres. Élargissez la recherche ou changez de tranche de note.';
     }
     const label=`${shown.length} sur ${v.length} titres affichés`;
@@ -669,41 +665,43 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
   showPage(location.hash.slice(1),false);
 
 
-  // Ajouter un titre (recherche JustWatch via le script Google, sans ordinateur allumé)
+  // Ajouter un titre : la barre de recherche cherche dans la liste ET propose les titres à ajouter (JustWatch via le script Google)
   const PLAT={nf:'Netflix',pv:'Prime Video',atv:'Apple TV'};
+  let addSeq=0, addTimer=null, addRes=[];
   function addMsg(t,cls){const m=$('addmsg');m.textContent=t||'';m.className='addmsg'+(cls?' '+cls:'');}
-  function openAdd(o){$('addpanel').hidden=!o;$('addbtn').setAttribute('aria-expanded',o);if(o)setTimeout(()=>$('addq').focus(),50);}
+  function showAdd(o){$('addpanel').hidden=!o;$('addbtn').setAttribute('aria-expanded',o);}
   if(SYNC_URL){$('addbtn').hidden=false;}
-  $('addbtn').addEventListener('click',()=>openAdd($('addpanel').hidden));
-  $('addclose').addEventListener('click',()=>openAdd(false));
-  $('empty').addEventListener('click',e=>{if(!e.target.closest('#addfromq'))return;openAdd(true);$('addq').value=S.q.trim();$('addform').requestSubmit();$('addpanel').scrollIntoView({behavior:'smooth',block:'start'});});
-  $('addform').addEventListener('submit',async e=>{
-    e.preventDefault(); const q=$('addq').value.trim(); if(!q) return;
-    addMsg('Recherche…'); $('addres').innerHTML='';
+  $('addbtn').addEventListener('click',()=>{const q=$('q');q.focus();q.scrollIntoView({block:'center',behavior:'smooth'});if(!q.value)addMsg('');if(q.value.trim().length>=2)suggest(q.value.trim());else{showAdd(true);$('addres').innerHTML='';addMsg('Tapez le nom du film ou de la série dans la barre de recherche ci-dessus.');}});
+  $('addclose').addEventListener('click',()=>showAdd(false));
+  async function suggest(q){
+    if(!SYNC_URL) return;
+    const my=++addSeq;
+    showAdd(true); addMsg('Recherche de « '+q+' »…'); $('addres').innerHTML='';
     try{
       const r=await fetch(SYNC_URL+'?a=search&q='+encodeURIComponent(q),{cache:'no-store'}); const j=await r.json();
-      const res=j.results||[];
-      if(!res.length){addMsg('Aucun résultat pour « '+q+' ».','err');return;}
-      addMsg('Choisissez le titre et la liste où le ranger :');
-      $('addres').innerHTML=res.map((x,i)=>{
-        const inList=DATA.some(d=>normT(d.title)===normT(x.title));
-        return `<li><img src="${esc(x.poster||'')}" alt="" loading="lazy"><div class="ainfo"><span class="at">${esc(x.title)}</span><span class="am">${esc(x.type)} · ${esc(x.year||'')}${x.platforms.length?' · sur '+x.platforms.map(k=>PLAT[k]).join(', '):''}</span>
-          ${inList?'<span class="am">Déjà dans la liste</span>':`<div class="abtns">${['nf','pv','atv'].map(k=>`<button type="button" data-add="${i}" data-src="${k}" class="${x.platforms.includes(k)?'on':''}">+ ${PLAT[k]}</button>`).join('')}</div>`}</div></li>`;
-      }).join('');
-      $('addres').dataset.res=JSON.stringify(res);
-    }catch(err){addMsg('La recherche ne répond pas. Réessayez dans un instant.','err');}
+      if(my!==addSeq) return;
+      addRes=(j.results||[]).filter(x=>!DATA.some(d=>normT(d.title)===normT(x.title)));
+      if(!addRes.length){addMsg((j.results||[]).length?'Tous les résultats pour « '+q+' » sont déjà dans la liste.':'Aucun titre trouvé pour « '+q+' ».');return;}
+      addMsg('Pas encore dans votre liste : touchez la plateforme où le ranger.');
+      $('addres').innerHTML=addRes.map((x,i)=>`<li><img src="${esc(x.poster||'')}" alt="" loading="lazy"><div class="ainfo"><span class="at">${esc(x.title)}</span><span class="am">${esc(x.type)} · ${esc(x.year||'')}${x.platforms.length?' · sur '+x.platforms.map(k=>PLAT[k]).join(', '):''}</span><div class="abtns">${['nf','pv','atv'].map(k=>`<button type="button" data-add="${i}" data-src="${k}" class="${x.platforms.includes(k)?'on':''}">+ ${PLAT[k]}</button>`).join('')}</div></div></li>`).join('');
+    }catch(err){ if(my===addSeq) addMsg('La recherche ne répond pas. Réessayez dans un instant.','err'); }
+  }
+  $('q').addEventListener('input',e=>{
+    clearTimeout(addTimer); const q=e.target.value.trim();
+    if(q.length<2){addSeq++; showAdd(false); return;}
+    addTimer=setTimeout(()=>suggest(q),700);
   });
   $('addres').addEventListener('click',async e=>{
     const b=e.target.closest('button[data-add]'); if(!b) return;
-    const x=JSON.parse($('addres').dataset.res||'[]')[+b.dataset.add]; if(!x) return;
+    const x=addRes[+b.dataset.add]; if(!x) return;
     $('addres').querySelectorAll('button').forEach(z=>z.disabled=true);
     addMsg('Ajout de « '+x.title+' » en cours (notes, affiche, plateformes)…');
     try{
       const r=await fetch(SYNC_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({op:'add',path:x.path,src:b.dataset.src})});
       const j=await r.json(); applyState(j);
       addMsg(j.message||'Ajouté.',j.ok?'ok':'err');
-      if(j.ok){$('addres').innerHTML='';$('addq').value='';}
-      else $('addres').querySelectorAll('button').forEach(z=>z.disabled=false);
+      if(j.ok){ b.closest('li').remove(); addRes[+b.dataset.add]=null; }
+      $('addres').querySelectorAll('button').forEach(z=>z.disabled=false);
     }catch(err){addMsg("L'ajout n'a pas abouti. Réessayez dans un instant.",'err');$('addres').querySelectorAll('button').forEach(z=>z.disabled=false);}
   });
   fetch('data.json').then(r=>r.json()).then(d=>{
