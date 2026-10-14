@@ -594,6 +594,12 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
       </li>`;
     }).join('');
     $('empty').hidden=shown.length>0;
+    if(!shown.length){
+      const q=S.q.trim();
+      $('empty').innerHTML=q&&SYNC_URL
+        ?`« ${esc(q)} » n'est pas dans la liste. <button type="button" class="addbtn" id="addfromq" style="margin-left:8px">+ Chercher « ${esc(q)} » pour l'ajouter</button>`
+        :'Aucun titre ne correspond à ces filtres. Élargissez la recherche ou changez de tranche de note.';
+    }
     const label=`${shown.length} sur ${v.length} titres affichés`;
     $('count-bottom').textContent=label;
 
@@ -670,6 +676,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
   if(SYNC_URL){$('addbtn').hidden=false;}
   $('addbtn').addEventListener('click',()=>openAdd($('addpanel').hidden));
   $('addclose').addEventListener('click',()=>openAdd(false));
+  $('empty').addEventListener('click',e=>{if(!e.target.closest('#addfromq'))return;openAdd(true);$('addq').value=S.q.trim();$('addform').requestSubmit();$('addpanel').scrollIntoView({behavior:'smooth',block:'start'});});
   $('addform').addEventListener('submit',async e=>{
     e.preventDefault(); const q=$('addq').value.trim(); if(!q) return;
     addMsg('Recherche…'); $('addres').innerHTML='';
