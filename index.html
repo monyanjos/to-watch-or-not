@@ -359,7 +359,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
       <span>N°</span>
       <div style="display:flex;justify-content:space-between;gap:16px"><span>Titre</span><span style="width:44px;text-align:center">Affiche</span></div>
       <span>Sortie</span>
-      <div class="stack"><span style="display:flex;align-items:center;gap:8px"><img src="logos/allocine-light.svg" width="74" height="16" alt="AlloCiné"><span>sur 5</span></span><div class="pair"><span>Presse</span><span>Spect.</span></div></div>
+      <div class="stack"><span style="display:flex;align-items:center;gap:8px"><img src="logos/allocine-badge.svg" width="78" height="20" alt="AlloCiné"><span>sur 5</span></span><div class="pair"><span>Presse</span><span>Spect.</span></div></div>
       <div class="stack"><img src="logos/imdb.svg" width="36" height="18" alt="IMDb"><span>Sur 10</span></div>
       <div class="stack"><span style="display:flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-weight:500">via <img src="logos/justwatch.svg" width="68" height="11" alt="JustWatch"></span><span>Où regarder</span></div>
       <span class="sr">Actions</span>
@@ -590,7 +590,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
           <img class="poster" src="${d.poster}" alt="" loading="lazy" width="44" height="63">
         </div>
         <span class="date"><span class="lab">Sortie</span>${esc(d.date)}</span>
-        <div class="c-ac"><span class="lab"><img src="logos/allocine-light.svg" width="64" height="14" alt="AlloCiné"> presse · spect. /5</span><div class="pair"><span class="${d.acP!=null&&d.acP>=3.5?'sc press':cls(d.acP,4,2.5)}">${fmt(d.acP)}</span><span class="${d.acS!=null&&d.acS>=4?'sc press':cls(d.acS,4,2.5)}">${fmt(d.acS)}</span></div></div>
+        <div class="c-ac"><span class="lab"><img src="logos/allocine-badge.svg" width="66" height="17" alt="AlloCiné"> presse · spect. /5</span><div class="pair"><span class="${d.acP!=null&&d.acP>=3.5?'sc press':cls(d.acP,4,2.5)}">${fmt(d.acP)}</span><span class="${d.acS!=null&&d.acS>=4?'sc press':cls(d.acS,4,2.5)}">${fmt(d.acS)}</span></div></div>
         <div class="c-im"><span class="lab"><img src="logos/imdb.svg" width="30" height="15" alt="IMDb"> sur 10</span><span class="${d.imdb!=null&&d.imdb>=7?'sc press':cls(d.imdb,7,6)}">${fmt(d.imdb)}</span></div>
         <div class="where">${offers}</div>
         <div class="act"><button type="button" class="seenbtn" data-seen="${d.pos}" aria-pressed="${!!S.seen[d.pos]}"><span class="box"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3A2506" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Déjà vu</button>${isP?`${rmLinks(d)}`:''}<button type="button" class="ghost" data-toggle="${d.pos}">${isP?'Annuler':'Retirer de la liste'}</button></div>
