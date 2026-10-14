@@ -6,6 +6,9 @@
 <meta name="robots" content="noindex,nofollow">
 <style>[hidden]{display:none!important}img{max-width:100%}body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
 <title>To watch… or not</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0B0C10">
+<link rel="apple-touch-icon" href="icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Bebas+Neue&display=swap">
@@ -309,7 +312,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
       <label class="field search" for="q">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
         <span class="sr">Rechercher un titre</span>
-        <input type="search" id="q" placeholder="Rechercher ou ajouter un titre…">
+        <input type="search" id="q" placeholder="Rechercher, ajouter ou coller un lien…">
       </label>
       <button type="button" class="ftoggle" id="ftoggle" aria-expanded="false" aria-controls="more-filters"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Filtres<span class="fcount" id="fcount" hidden></span></button>
     </div>
@@ -632,7 +635,8 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
   $('pick-types').addEventListener('click',e=>{const b=e.target.closest('button[data-ptype]');if(!b)return;PT=b.dataset.ptype;$('pick-types').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderCards();});
   $('types').addEventListener('click',e=>{const b=e.target.closest('button[data-type]');if(!b)return;S.type=b.dataset.type;renderTypes();renderRows();});
   $('filters').addEventListener('submit',e=>e.preventDefault());
-  $('q').addEventListener('input',e=>{S.q=e.target.value;renderRows();});
+  const isLink=v=>/https?:\/\/\S+/.test(v||'');
+  $('q').addEventListener('input',e=>{S.q=isLink(e.target.value)?'':e.target.value;renderRows();});
   $('genre').addEventListener('change',e=>{S.genre=e.target.value;renderRows();});
   $('minAcP').addEventListener('change',e=>{S.minAcP=e.target.value;renderRows();});
   $('minAc').addEventListener('change',e=>{S.minAc=e.target.value;renderRows();});
@@ -675,6 +679,26 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
   function addMsg(t,cls){const m=$('addmsg');m.textContent=t||'';m.className='addmsg'+(cls?' '+cls:'');}
   function showAdd(o){$('addpanel').hidden=!o;}
   $('addclose').addEventListener('click',()=>showAdd(false));
+  // Lien collé (Netflix, Prime Video, Apple TV) : ajout direct, la plateforme est reconnue d'après le lien
+  function linkOffer(text){
+    if(!SYNC_URL) return;
+    const u=(text.match(/https?:\/\/\S+/)||[''])[0];
+    const plat=/netflix\./i.test(u)?'Netflix':/primevideo\.|amazon\./i.test(u)?'Prime Video':/tv\.apple\./i.test(u)?'Apple TV':'';
+    showAdd(true); addRes=[];
+    addMsg(plat?'Lien '+plat+' reconnu.':'Lien reconnu.');
+    $('addres').innerHTML=`<li class="alink"><div class="ainfo"><div class="ahead"><span class="at">Ajouter le titre de ce lien${plat?' à '+plat:''}</span><button type="button" class="addbtn small" id="addlink">+ Ajouter</button></div><span class="am">${esc(u.length>70?u.slice(0,70)+'…':u)}</span></div></li>`;
+    $('addlink').onclick=()=>addFromLink(text);
+  }
+  async function addFromLink(text){
+    $('addlink').disabled=true; addMsg('Recherche du titre et ajout en cours…');
+    try{
+      const r=await fetch(SYNC_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({op:'add',text})});
+      const j=await r.json(); applyState(j);
+      addMsg(j.message||'Ajouté.',j.ok?'ok':'err');
+      if(j.ok){$('addres').innerHTML='';$('q').value='';S.q='';renderRows();}
+      else $('addlink').disabled=false;
+    }catch(err){addMsg("L'ajout n'a pas abouti. Réessayez dans un instant.",'err');$('addlink').disabled=false;}
+  }
   async function suggest(q){
     if(!SYNC_URL) return;
     const my=++addSeq;
@@ -690,6 +714,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
   }
   $('q').addEventListener('input',e=>{
     clearTimeout(addTimer); const q=e.target.value.trim();
+    if(isLink(q)){addSeq++; linkOffer(q); return;}
     if(q.length<2){addSeq++; showAdd(false); return;}
     addTimer=setTimeout(()=>suggest(q),700);
   });
@@ -711,6 +736,8 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
   });
   fetch('data.json').then(r=>r.json()).then(d=>{
     BASE=d; merge();
+    try{const sp=new URLSearchParams(location.search);const shared=[sp.get('title'),sp.get('text'),sp.get('url')].filter(Boolean).join(' ').trim();
+      if(shared){$('q').value=shared;history.replaceState(null,'',location.pathname+location.hash);setTimeout(()=>{if(isLink(shared))linkOffer(shared);else{suggest(shared);}$('filters').scrollIntoView({block:'start'});},300);}}catch(e){}
     renderCards(); all(); syncStatus(); pull();
   }).catch(()=>{$('empty').hidden=false;$('empty').textContent="La liste n'a pas pu se charger. Rechargez la page."});
 })();
