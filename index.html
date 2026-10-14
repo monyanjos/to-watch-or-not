@@ -207,6 +207,26 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
   .frow.more .flab img{height:14px;width:auto}
   .frow.more select{width:100%;font-size:14px;padding:2px 0}
 }
+/* Ajout de titres */
+.addbtn{display:inline-flex;align-items:center;gap:8px;flex:none;min-height:44px;padding:0 16px;border-radius:10px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;color:#1A1206;border:0;background:linear-gradient(180deg,var(--gold-hi) 0%,var(--gold) 60%,#C98A22 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 2px 0 #8A5A12,0 6px 14px rgba(242,180,58,.25)}
+.addbtn:active{transform:translateY(1px)}
+.addpanel{display:flex;flex-direction:column;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--gold-lo);border-radius:16px}
+.addhead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.addhead h3{margin:0;font-family:var(--marquee);font-size:28px;font-weight:400;letter-spacing:.04em;color:var(--ink)}
+.addrow{display:flex;gap:10px;flex-wrap:wrap}
+.addmsg{margin:0;font-size:14px;color:var(--muted);min-height:1.2em}
+.addmsg.ok{color:#7BD88F}.addmsg.err{color:var(--danger)}
+.addres{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:10px}
+.addres li{display:flex;gap:12px;align-items:flex-start;padding:10px;border:1px solid var(--line-2);border-radius:12px;background:var(--bg);min-width:0}
+.addres img{flex:none;width:52px;height:74px;object-fit:cover;border-radius:6px;background:var(--surface-2)}
+.addres .ainfo{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.addres .at{font-weight:700;font-size:15px}
+.addres .am{font-size:12px;color:var(--dim)}
+.addres .abtns{display:flex;flex-wrap:wrap;gap:6px}
+.addres .abtns button{font:inherit;font-size:12px;font-weight:700;min-height:32px;padding:0 10px;border-radius:8px;cursor:pointer;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-2)}
+.addres .abtns button.on{color:var(--ink);border-color:var(--gold-lo)}
+.addres .abtns button:disabled{opacity:.5;cursor:wait}
+@media (max-width:640px){#filters .field.search{flex:1 1 100%}.addbtn,.ftoggle{flex:1 1 0;justify-content:center}.addhead h3{font-size:24px}}
 /* Relief : boutons et champs en léger 3D, comme des touches éclairées par le haut */
 .field,.ghost,.cta,.chip,.seenbtn{background:linear-gradient(180deg,#272B36 0%,#181A21 100%);border:1px solid #2F3442;border-top-color:#444A5C;border-bottom-color:#0C0D11;box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 0 #07080B,0 6px 14px rgba(0,0,0,.45);transition:transform .08s ease,box-shadow .08s ease,border-color .15s}
 .chip{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 2px 0 #07080B,0 3px 8px rgba(0,0,0,.35)}
@@ -286,6 +306,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
         <span class="sr">Rechercher un titre</span>
         <input type="search" id="q" placeholder="Rechercher un titre…">
       </label>
+      <button type="button" class="addbtn" id="addbtn" hidden aria-expanded="false" aria-controls="addpanel"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Ajouter</button>
       <button type="button" class="ftoggle" id="ftoggle" aria-expanded="false" aria-controls="more-filters"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Filtres<span class="fcount" id="fcount" hidden></span></button>
     </div>
     <div class="frow more" id="more-filters">
@@ -316,6 +337,19 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
       </label>
     </div>
   </form>
+
+  <section class="addpanel" id="addpanel" hidden aria-label="Ajouter un titre">
+    <div class="addhead">
+      <h3>Ajouter un titre</h3>
+      <button type="button" class="ghost" id="addclose">Fermer</button>
+    </div>
+    <form class="addrow" id="addform" autocomplete="off">
+      <label class="field search" for="addq"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span class="sr">Nom du film ou de la série</span><input type="search" id="addq" placeholder="Nom du film ou de la série…"></label>
+      <button type="submit" class="cta">Chercher</button>
+    </form>
+    <p class="addmsg" id="addmsg" aria-live="polite"></p>
+    <ul class="addres" id="addres"></ul>
+  </section>
 
   <div class="table">
     <div class="row head">
@@ -387,7 +421,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
   const SRCS=[{id:'all',label:'<span>Toutes<span class="lg"> les listes</span></span>'},{id:'nf',img:'<img src="logos/netflix.svg" width="68" height="18" alt="Netflix">'},{id:'pv',img:'<img class="inv" src="logos/primevideo-white.svg" width="66" height="21" alt="Prime Video">'},{id:'atv',img:'<img class="inv" src="logos/appletv-white.svg" width="28" height="28" alt="Apple TV">'}];
   const SRCBADGE={nf:'<span class="src" title="Ma liste Netflix"><img src="logos/netflix-n.svg" width="8" height="14" alt="Netflix"></span>',pv:'<span class="src" title="Liste de favoris Prime Video"><img src="logos/primevideo-white.svg" width="38" height="12" alt="Prime Video"></span>',atv:'<span class="src" title="À suivre Apple TV"><img src="logos/appletv-white.svg" width="16" height="16" alt="Apple TV"></span>'};
   const CTALOGO={nf:'<img src="logos/netflix.svg" width="52" height="14" alt="Netflix">',pv:'<img src="logos/primevideo-white.svg" width="52" height="16" alt="Prime Video">',atv:'<img src="logos/appletv-white.svg" width="20" height="20" alt=""> Apple TV'};
-  const titleUrl=d=>d.nf?NF+d.nf:d.pv?'https://www.primevideo.com/detail/'+d.pv:d.atv;
+  const titleUrl=d=>d.link?d.link:d.nf?NF+d.nf:d.pv?'https://www.primevideo.com/detail/'+d.pv:d.atv;
   const TYPES=[{id:'all',label:'Tout'},{id:'Série',label:'Séries'},{id:'Film',label:'Films'},{id:'Documentaire',label:'<span>Doc<span class="lg">umentaire</span>s</span>'}];
   const PILL={'Série':['serie','Série'],'Film':['film','Film'],'Documentaire':['doc','Doc']};
   const MONTHS={'janv.':1,'févr.':2,'mars':3,'avr.':4,'mai':5,'juin':6,'juil.':7,'août':8,'sept.':9,'oct.':10,'nov.':11,'déc.':12};
@@ -416,6 +450,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
     if(!st||typeof st!=='object'||st.error&&!st.state) return;
     if(st.state) st=st.state;
     S.removed=st.removed||{}; S.hist=st.hist||[]; S.seen=st.seen||{};
+    if(Array.isArray(st.added)){S.added=st.added; store.set('twon-added',S.added); merge();}
     persist(); syncOK=true; syncAt=Date.now(); syncStatus(); if(DATA.length) all();
   }
   async function pull(){
@@ -433,7 +468,20 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
     setInterval(()=>{if(document.visibilityState==='visible') pull()},30000);
     document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible') pull()});
   }
-  let DATA=[];
+  let DATA=[], BASE=[];
+  S.added=store.get('twon-added',[]);
+  const normT=t=>String(t||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  // Liste = data.json (mise à jour par le Mac) + titres ajoutés depuis le site ou le raccourci iPhone (stockés chez Google)
+  function merge(){
+    const have=new Set(BASE.map(x=>normT(x.title)));
+    DATA=BASE.concat((S.added||[]).filter(a=>a&&a.title&&!have.has(normT(a.title))));
+    buildGenres();
+  }
+  function buildGenres(){
+    const cur=$('genre').value, genres=new Set(); DATA.forEach(x=>(x.genre||'').split(' · ').filter(Boolean).forEach(g=>genres.add(g)));
+    $('genre').innerHTML='<option value="">Tous</option>'+[...genres].sort((a,b)=>a.localeCompare(b,'fr')).map(g=>`<option>${esc(g)}</option>`).join('');
+    $('genre').value=cur;
+  }
 
   const $=id=>document.getElementById(id);
 
@@ -614,10 +662,45 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
   window.addEventListener('popstate',()=>showPage(location.hash.slice(1),true));
   showPage(location.hash.slice(1),false);
 
+
+  // Ajouter un titre (recherche JustWatch via le script Google, sans ordinateur allumé)
+  const PLAT={nf:'Netflix',pv:'Prime Video',atv:'Apple TV'};
+  function addMsg(t,cls){const m=$('addmsg');m.textContent=t||'';m.className='addmsg'+(cls?' '+cls:'');}
+  function openAdd(o){$('addpanel').hidden=!o;$('addbtn').setAttribute('aria-expanded',o);if(o)setTimeout(()=>$('addq').focus(),50);}
+  if(SYNC_URL){$('addbtn').hidden=false;}
+  $('addbtn').addEventListener('click',()=>openAdd($('addpanel').hidden));
+  $('addclose').addEventListener('click',()=>openAdd(false));
+  $('addform').addEventListener('submit',async e=>{
+    e.preventDefault(); const q=$('addq').value.trim(); if(!q) return;
+    addMsg('Recherche…'); $('addres').innerHTML='';
+    try{
+      const r=await fetch(SYNC_URL+'?a=search&q='+encodeURIComponent(q),{cache:'no-store'}); const j=await r.json();
+      const res=j.results||[];
+      if(!res.length){addMsg('Aucun résultat pour « '+q+' ».','err');return;}
+      addMsg('Choisissez le titre et la liste où le ranger :');
+      $('addres').innerHTML=res.map((x,i)=>{
+        const inList=DATA.some(d=>normT(d.title)===normT(x.title));
+        return `<li><img src="${esc(x.poster||'')}" alt="" loading="lazy"><div class="ainfo"><span class="at">${esc(x.title)}</span><span class="am">${esc(x.type)} · ${esc(x.year||'')}${x.platforms.length?' · sur '+x.platforms.map(k=>PLAT[k]).join(', '):''}</span>
+          ${inList?'<span class="am">Déjà dans la liste</span>':`<div class="abtns">${['nf','pv','atv'].map(k=>`<button type="button" data-add="${i}" data-src="${k}" class="${x.platforms.includes(k)?'on':''}">+ ${PLAT[k]}</button>`).join('')}</div>`}</div></li>`;
+      }).join('');
+      $('addres').dataset.res=JSON.stringify(res);
+    }catch(err){addMsg('La recherche ne répond pas. Réessayez dans un instant.','err');}
+  });
+  $('addres').addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-add]'); if(!b) return;
+    const x=JSON.parse($('addres').dataset.res||'[]')[+b.dataset.add]; if(!x) return;
+    $('addres').querySelectorAll('button').forEach(z=>z.disabled=true);
+    addMsg('Ajout de « '+x.title+' » en cours (notes, affiche, plateformes)…');
+    try{
+      const r=await fetch(SYNC_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({op:'add',path:x.path,src:b.dataset.src})});
+      const j=await r.json(); applyState(j);
+      addMsg(j.message||'Ajouté.',j.ok?'ok':'err');
+      if(j.ok){$('addres').innerHTML='';$('addq').value='';}
+      else $('addres').querySelectorAll('button').forEach(z=>z.disabled=false);
+    }catch(err){addMsg("L'ajout n'a pas abouti. Réessayez dans un instant.",'err');$('addres').querySelectorAll('button').forEach(z=>z.disabled=false);}
+  });
   fetch('data.json').then(r=>r.json()).then(d=>{
-    DATA=d;
-    const genres=new Set(); d.forEach(x=>(x.genre||'').split(' · ').filter(Boolean).forEach(g=>genres.add(g)));
-    $('genre').innerHTML='<option value="">Tous</option>'+[...genres].sort((a,b)=>a.localeCompare(b,'fr')).map(g=>`<option>${esc(g)}</option>`).join('');
+    BASE=d; merge();
     renderCards(); all(); syncStatus(); pull();
   }).catch(()=>{$('empty').hidden=false;$('empty').textContent="La liste n'a pas pu se charger. Rechargez la page."});
 })();
