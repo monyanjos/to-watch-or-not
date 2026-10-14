@@ -1,16 +1,20 @@
 {
+  "id": "./",
   "name": "To watch… or not",
   "short_name": "To watch",
   "description": "Mes listes Netflix, Prime Video et Apple TV avec les notes AlloCiné et IMDb",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0B0C10",
   "theme_color": "#0B0C10",
   "lang": "fr",
   "icons": [
-    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
-    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable"},
+    {"src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
   ],
   "share_target": {
     "action": "./",

@@ -8,7 +8,12 @@
 <title>To watch… or not</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0B0C10">
-<link rel="apple-touch-icon" href="icon-512.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="apple-mobile-web-app-title" content="To watch">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Bebas+Neue&display=swap">
@@ -734,6 +739,7 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
       $('addres').querySelectorAll('button').forEach(z=>z.disabled=false);
     }catch(err){addMsg("L'ajout n'a pas abouti. Réessayez dans un instant.",'err');$('addres').querySelectorAll('button').forEach(z=>z.disabled=false);}
   });
+  if('serviceWorker' in navigator&&location.protocol==='https:'){navigator.serviceWorker.register('sw.js').catch(()=>{});}
   // Toujours la dernière version : si la page gardée en mémoire par le navigateur est périmée, on la recharge une fois
   (async()=>{try{
     if(location.protocol!=='https:'||!/github\.io$/.test(location.hostname)) return;
