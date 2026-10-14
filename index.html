@@ -734,7 +734,16 @@ h2{font-family:var(--marquee);font-size:46px;line-height:1;font-weight:400;lette
       $('addres').querySelectorAll('button').forEach(z=>z.disabled=false);
     }catch(err){addMsg("L'ajout n'a pas abouti. Réessayez dans un instant.",'err');$('addres').querySelectorAll('button').forEach(z=>z.disabled=false);}
   });
-  fetch('data.json').then(r=>r.json()).then(d=>{
+  // Toujours la dernière version : si la page gardée en mémoire par le navigateur est périmée, on la recharge une fois
+  (async()=>{try{
+    if(location.protocol!=='https:'||!/github\.io$/.test(location.hostname)) return;
+    const u=location.pathname;
+    const [old,fresh]=await Promise.all([fetch(u,{cache:'force-cache'}).then(r=>r.text()),fetch(u,{cache:'reload'}).then(r=>r.text())]);
+    const k='twon-reloaded';
+    if(old!==fresh&&!sessionStorage.getItem(k)){sessionStorage.setItem(k,'1');location.reload();}
+    else sessionStorage.removeItem(k);
+  }catch(e){}})();
+  fetch('data.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{
     BASE=d; merge();
     try{const sp=new URLSearchParams(location.search);const shared=[sp.get('title'),sp.get('text'),sp.get('url')].filter(Boolean).join(' ').trim();
       if(shared){$('q').value=shared;history.replaceState(null,'',location.pathname+location.hash);setTimeout(()=>{if(isLink(shared))linkOffer(shared);else{suggest(shared);}$('filters').scrollIntoView({block:'start'});},300);}}catch(e){}
