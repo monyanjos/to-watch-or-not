@@ -145,7 +145,7 @@ function gql_(query, variables) {
   return JSON.parse(r.getContentText()).data;
 }
 
-const Q_SEARCH = 'query S($q:String!){popularTitles(country:FR,first:8,filter:{searchQuery:$q}){edges{node{objectType ... on MovieOrShow{content(country:FR,language:"fr"){title originalReleaseYear fullPath posterUrl} offers(country:FR,platform:WEB){monetizationType package{technicalName}}}}}}}';
+const Q_SEARCH = 'query S($q:String!){popularTitles(country:FR,first:8,filter:{searchQuery:$q}){edges{node{objectType ... on MovieOrShow{content(country:FR,language:"fr"){title originalReleaseYear fullPath posterUrl shortDescription} offers(country:FR,platform:WEB){monetizationType package{technicalName}}}}}}}';
 const Q_TITLE = 'query T($p:String!){urlV2(fullPath:$p){node{... on MovieOrShow{objectType content(country:FR,language:"fr"){title originalReleaseYear originalReleaseDate fullPath posterUrl genres{translation(language:"fr")} scoring{imdbScore} externalIds{imdbId}} offers(country:FR,platform:WEB){monetizationType presentationType standardWebURL package{technicalName}}}}}}';
 
 function poster_(u) { return u ? 'https://images.justwatch.com' + u.replace('{profile}', 's332').replace('{format}', 'jpg') : null; }
@@ -156,13 +156,24 @@ function platformsOf_(offers) {
   return Object.keys(out);
 }
 
+/* Premiere phrase du resume JustWatch, coupee a 160 caracteres, pour les propositions d'ajout. */
+function shortDesc_(t) {
+  t = String(t || '').replace(/\s+/g, ' ').trim();
+  if (!t) return '';
+  const m = t.match(/^.{20,160}?[.!?](\s|$)/);
+  let out = m ? m[0].trim() : t.slice(0, 160);
+  if (!m && t.length > 160) out = out.replace(/\s+\S*$/, '') + '\u2026';
+  return out;
+}
+
 function search_(q) {
   q = String(q || '').trim();
   if (!q) return [];
   const d = gql_(Q_SEARCH, { q: q });
   return ((d && d.popularTitles && d.popularTitles.edges) || []).map(e => e.node).filter(n => n && n.content).map(n => ({
     path: n.content.fullPath, title: n.content.title, year: n.content.originalReleaseYear,
-    type: n.objectType === 'SHOW' ? 'S\u00e9rie' : 'Film', poster: poster_(n.content.posterUrl), platforms: platformsOf_(n.offers)
+    type: n.objectType === 'SHOW' ? 'S\u00e9rie' : 'Film', poster: poster_(n.content.posterUrl), platforms: platformsOf_(n.offers),
+    desc: shortDesc_(n.content.shortDescription)
   }));
 }
 
